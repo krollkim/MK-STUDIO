@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/* ============================================================
+   M.K Studio — Tailwind v4 CSS-first theme (NO tailwind.config.ts).
+   Tokens here auto-generate utilities: bg-surface, text-muted, border-line…
+   Palette: light, airy, minimal. Graphite ink + a single brass accent.
+   ============================================================ */
+@theme {
+  --color-bg: #ffffff;
+  --color-surface: #f6f4f1;
+  --color-surface-2: #ece7e1;
+  --color-ink: #14161a;
+  --color-muted: #6c7178;
+  --color-line: #e4dfd8;
+  --color-primary: #181b1f;
+  --color-accent: #b07a45;
+  --color-accent-soft: #f4e9dd;
+  --color-whatsapp: #25d366;
+
+  --font-sans: "Heebo", system-ui, sans-serif;
+
+  --radius-pill: 999px;
+  --radius-card: 20px;
+  --radius-xl2: 28px;
+}
+
+/* ===== Base ===== */
+* {
+  box-sizing: border-box;
+}
+
+/* RTL is also set on <html dir="rtl"> in layout.tsx — belt-and-suspenders. */
+html {
+  direction: rtl;
+  scroll-behavior: smooth;
+  /* Clears the sticky header so anchor jumps don't hide the heading behind it. */
+  scroll-padding-top: 5.5rem;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Visible focus ring for keyboard users, everywhere. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Skip link: hidden until focused. */
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link:focus {
+  position: fixed;
+  top: 1rem;
+  inset-inline-end: 1rem;
+  z-index: 100;
+  width: auto;
+  height: auto;
+  clip: auto;
+  padding: 0.75rem 1.25rem;
+  background: var(--color-ink);
+  color: #fff;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+}
+
+/* ============================================================
+   Motion helpers — pair with the gsap-scroll-reveal components.
+   ============================================================ */
+
+/* Prevents a flash of un-animated content before GSAP boots; GSAP fades these in. */
+.intro-hidden {
+  opacity: 0;
+}
+
+/* GPU hint for the pinned studio sequence (continuously tweened transform/opacity). */
+.gpu {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Accessibility: respect users who opted out of motion.
+   Never leave .intro-hidden content invisible for them. */
+@media (prefers-reduced-motion: reduce) {
+  .intro-hidden {
+    opacity: 1;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,58 @@
+# dependencies
+/node_modules
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/versions
+
+# next.js
+/.next/
+/out/
+/build
+next-env.d.ts
+tsconfig.tsbuildinfo
+.turbo
+
+# testing / tooling output
+/coverage
+/test-results
+/playwright-report
+/blob-report
+/.swc
+
+# env — never commit real keys
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# deployment
+.vercel
+.netlify
+
+# debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# editors / OS
+.idea
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+*.pem
+*.swp
+
+# ------------------------------------------------------------------
+# Raw client assets — the original "מתן - תכנים" folder (~600MB, mostly
+# the uncompressed 4K "מי אני" video). Everything the site actually serves
+# was derived from it into /public by scripts/prepare-assets.mjs, so the
+# repo stays small. Keep the folder locally; back it up outside git.
+# ------------------------------------------------------------------
+/מתן - תכנים/
