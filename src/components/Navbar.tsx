@@ -5,16 +5,21 @@ import Logo from './Logo'
 import WhatsAppCTA from './WhatsAppCTA'
 import { NAV_LINKS } from '@/lib/content'
 
-/**
- * Sticky RTL navbar. Transparent over the hero, then solidifies on scroll so the
- * light hero stays clean at the top of the page.
- */
-export default function Navbar() {
+interface NavbarProps {
+  /**
+   * True when the page opens with the dark cinematic hero: the bar starts
+   * transparent with light marks and flips to the greige bar once scrolled.
+   * Light pages (e.g. /accessibility) leave this off and stay dark-on-light.
+   */
+  overDarkHero?: boolean
+}
+
+export default function Navbar({ overDarkHero = false }: NavbarProps) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
+    const onScroll = () => setScrolled(window.scrollY > 40)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -28,33 +33,52 @@ export default function Navbar() {
     }
   }, [open])
 
+  const onDark = overDarkHero && !scrolled && !open
+
   return (
     <header
       className={
-        'fixed inset-x-0 top-0 z-50 transition-all duration-300 ' +
+        'fixed inset-x-0 top-0 z-50 transition-all duration-500 ' +
         (scrolled || open
-          ? 'border-b border-line bg-bg/90 backdrop-blur-md'
-          : 'border-b border-transparent')
+          ? 'border-b border-line bg-bg/85 backdrop-blur-xl'
+          : 'border-b border-transparent') +
+        // Over the photo hero the bar needs its own scrim — the top of the
+        // frame is pale wood and white links wash out against it.
+        (onDark ? ' bg-gradient-to-b from-night/65 via-night/25 to-transparent' : '')
       }
     >
       <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
-        {/* The hero carries the full wordmark, so on phones the bar shows the
-            monogram alone and the two don't compete. */}
-        <a href="#top" aria-label="M.K Studio — חזרה לראש הדף" className="shrink-0">
+        {/* Over the hero the logo is hidden: the hero itself shows the wordmark
+            large, directly below, and two logos stacked on top of each other
+            read as a mistake. It fades in as the hero scrolls away, which is
+            exactly when the bar needs to carry the identity on its own. */}
+        <a
+          href="#top"
+          aria-label="M.K Studio — חזרה לראש הדף"
+          className={
+            'shrink-0 transition-opacity duration-500 ' +
+            (onDark ? 'pointer-events-none opacity-0' : 'opacity-100')
+          }
+          tabIndex={onDark ? -1 : undefined}
+          aria-hidden={onDark ? 'true' : undefined}
+        >
           <span className="sm:hidden">
-            <Logo size={38} markOnly />
+            <Logo size={36} markOnly />
           </span>
           <span className="hidden sm:block">
-            <Logo size={38} />
+            <Logo size={36} />
           </span>
         </a>
 
-        <nav aria-label="ניווט ראשי" className="hidden flex-1 justify-center gap-7 lg:flex">
+        <nav aria-label="ניווט ראשי" className="hidden flex-1 justify-center gap-8 lg:flex">
           {NAV_LINKS.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="text-[15px] font-medium text-muted transition-colors hover:text-ink"
+              className={
+                'text-[15px] font-medium transition-colors ' +
+                (onDark ? 'text-white/85 hover:text-white' : 'text-muted hover:text-ink')
+              }
             >
               {l.label}
             </a>
@@ -62,7 +86,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden shrink-0 lg:block">
-          <WhatsAppCTA label="סשן היכרות חינם" className="px-5 py-2.5 text-[15px]" />
+          <WhatsAppCTA label="סשן היכרות חינם" size="sm" />
         </div>
 
         <button
@@ -71,7 +95,10 @@ export default function Navbar() {
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? 'סגירת התפריט' : 'פתיחת התפריט'}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink lg:hidden"
+          className={
+            'flex h-11 w-11 items-center justify-center rounded-full border transition-colors lg:hidden ' +
+            (onDark ? 'border-white/30 text-white' : 'border-line text-ink')
+          }
         >
           <svg
             width="20"
@@ -100,15 +127,16 @@ export default function Navbar() {
                 <a
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-2xl px-3 py-3 text-lg font-medium text-ink transition-colors hover:bg-surface"
+                  className="block rounded-2xl px-3 py-3 display-sm text-2xl text-ink transition-colors hover:bg-surface"
                 >
                   {l.label}
                 </a>
               </li>
             ))}
           </ul>
-          <div className="mt-5">
-            <WhatsAppCTA variant="green" className="w-full" />
+          <div className="mt-6">
+            {/* Same amber CTA as everywhere else — no second colour on mobile. */}
+            <WhatsAppCTA className="w-full" />
           </div>
         </nav>
       )}

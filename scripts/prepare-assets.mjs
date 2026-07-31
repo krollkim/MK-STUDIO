@@ -1,24 +1,34 @@
 #!/usr/bin/env node
 /**
- * One-off asset pipeline: takes the raw client folder ("מתן - תכנים") and emits
- * web-ready files into public/ with clean ASCII names.
+ * Asset pipeline: takes the raw client folder ("מתן - תכנים") and emits every
+ * web-ready file in public/, with clean ASCII names. Re-runnable — nothing in
+ * public/ is hand-made, so this is the single source of how it was produced.
  *
  *   - HEIC (incl. .png/.HEIC files that are really HEIC) -> JPEG, then WebP.
  *   - Oversized PNG/JPG photos -> resized WebP + JPEG fallback.
  *   - WhatsApp testimonial screenshots -> cropped to the quotable message only
  *     (this is also what removes the phone number / prior conversation).
+ *   - Video -> 1080p H.264 + faststart, plus a poster frame. The source
+ *     "מי אני" clip is 3840x2160 at 78 Mbps (592MB); shipping it untouched
+ *     would be a non-starter, this brings it to ~6.5MB.
  *
  * Run:  node scripts/prepare-assets.mjs
  */
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import sharp from 'sharp'
 import heicConvert from 'heic-convert'
+import ffmpeg from 'ffmpeg-static'
+
+const run = promisify(execFile)
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const SRC = path.join(ROOT, 'מתן - תכנים')
 const IMAGES = path.join(ROOT, 'public', 'images')
 const PROOF = path.join(ROOT, 'public', 'proof')
+const VIDEO = path.join(ROOT, 'public', 'video')
 
 /** HEIC magic bytes appear at offset 4 ("ftyp" + a heic/heix/mif1 brand). */
 async function isHeic(file) {
@@ -81,9 +91,37 @@ async function screenshot(srcFile, outName, box) {
   console.log(`  ${outName}  ${box.width}x${box.height}`)
 }
 
+/** Transcode to web-safe 1080p H.264. `+faststart` puts the moov atom first
+ *  so playback can begin before the whole file has downloaded. */
+async function video(srcFile, outFile) {
+  await run(ffmpeg, [
+    '-y', '-hide_banner', '-loglevel', 'error',
+    '-i', srcFile,
+    '-vf', 'scale=1920:-2',
+    '-c:v', 'libx264', '-profile:v', 'high', '-preset', 'slow', '-crf', '23',
+    '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
+    '-c:a', 'aac', '-b:a', '128k', '-ac', '2',
+    outFile,
+  ])
+  const { size } = await fs.stat(outFile)
+  console.log(`  ${path.basename(outFile)}  ${(size / 1048576).toFixed(1)}MB`)
+}
+
+/** Grab a still for the <video poster>, so nothing downloads until play. */
+async function poster(srcFile, outFile, seconds = 2) {
+  await run(ffmpeg, [
+    '-y', '-hide_banner', '-loglevel', 'error',
+    '-ss', String(seconds), '-i', srcFile,
+    '-frames:v', '1', '-vf', 'scale=1280:-2', '-q:v', '4',
+    outFile,
+  ])
+  console.log(`  ${path.basename(outFile)}`)
+}
+
 async function main() {
   await fs.mkdir(IMAGES, { recursive: true })
   await fs.mkdir(PROOF, { recursive: true })
+  await fs.mkdir(VIDEO, { recursive: true })
 
   const pics = path.join(SRC, 'תמונות')
 
@@ -106,13 +144,11 @@ async function main() {
   await screenshot(path.join(proofSrc, 'הודעת המלצה קרין.png'), 'review-karin', {
     left: 256, top: 640, width: 900, height: 600,
   })
-  // Amit Igar — one long message, split into its two quotable halves so each
-  // sticker stays readable at the marquee's fixed height.
-  await screenshot(path.join(proofSrc, 'המלצה איגר.png'), 'review-igar-1', {
-    left: 264, top: 1398, width: 866, height: 292,
-  })
-  await screenshot(path.join(proofSrc, 'המלצה איגר.png'), 'review-igar-2', {
-    left: 264, top: 1885, width: 866, height: 205,
+  // Amit Igar — the whole message in one piece, timestamp included. It is the
+  // longest of the three and that is fine: the marquee sizes each sticker to
+  // its own content, so nothing needs trimming to a common height.
+  await screenshot(path.join(proofSrc, 'המלצה איגר.png'), 'review-igar', {
+    left: 264, top: 1398, width: 866, height: 900,
   })
   // Naftali — crop keeps ONLY the testimonial; the earlier conversation
   // (which the client asked to obscure) is cropped away entirely.
@@ -121,6 +157,23 @@ async function main() {
     'review-naftali',
     { left: 316, top: 1366, width: 820, height: 300 }
   )
+
+  console.log('video:')
+  const storySrc = path.join(SRC, 'וידאו', 'מתן סרטון מי אני - לדף נחיתה.mp4')
+  await video(storySrc, path.join(VIDEO, 'matan-story.mp4'))
+  await poster(path.join(VIDEO, 'matan-story.mp4'), path.join(VIDEO, 'matan-story-poster.jpg'))
+
+  // The two testimonial clips are already small and phone-shot; they only
+  // need poster frames, so they are copied through untouched.
+  const testimonialSrc = path.join(SRC, 'המלצות')
+  for (const [from, to] of [
+    ['המלצה על לימוד גיטרה אור.mp4', 'testimonial-or'],
+    ['סרטון המלצה תאיר.mp4', 'testimonial-tair'],
+  ]) {
+    const out = path.join(PROOF, `${to}.mp4`)
+    await fs.copyFile(path.join(testimonialSrc, from), out)
+    await poster(out, path.join(PROOF, `${to}-poster.jpg`), 1)
+  }
 }
 
 main().catch((err) => {

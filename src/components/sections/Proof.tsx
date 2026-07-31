@@ -29,48 +29,48 @@ const VIDEOS: VideoTestimonial[] = [
     role: 'יוצרת',
     quote: 'הגעתי עם מילים, יצאתי עם שיר.',
     duration: '0:37',
+    // Shot landscape (832×464), so the 9:16 frame keeps only ~31% of the
+    // width. Tair sits at ~72% across, which a centred crop misses entirely.
+    objectPosition: '82% center',
   },
   // Third slot — intentionally empty until the next video testimonial arrives.
   { name: 'הבא בתור', role: 'הסרטון הבא יכול להיות שלך' },
 ]
 
+/**
+ * The marquee repeats this list on its own until one block overflows the
+ * container, so there is no gap even with a handful of reviews — just add
+ * entries here, no duplication needed.
+ */
 const REVIEWS: Testimonial[] = [
   {
     image: '/proof/review-karin.png',
-    imageAlt: 'הודעת תודה בוואטסאפ מקרין על ההקלטה והפלייבק שהופק באולפן',
+    imageAlt:
+      'הודעת תודה בוואטסאפ מקרין: "תודה רבה לך באמת על הכל, על הזמן והרצון. ממש הצלת אותי מפלייבק דפוק לפלייבק מאוד מאוד יפה"',
   },
   {
-    image: '/proof/review-igar-1.png',
-    imageAlt: 'הודעת וואטסאפ מעמית איגר: "האולפן שהשכרתי היה מטורף, איזה ציוד ברמה גבוהה"',
+    image: '/proof/review-igar.png',
+    imageAlt:
+      'הודעת וואטסאפ מעמית איגר: "האולפן שהשכרתי היה מטורף, איזה ציוד ברמה גבוהה זה לא יאמן. כל ההקלטות יצאו מטורף — הקלטנו גם ווקלים וגם גיטרות, והאקוסטיקה הייתה פשוט מדהימה"',
   },
   {
     image: '/proof/review-naftali.png',
-    imageAlt: 'הודעת וואטסאפ מנפתלי על כך שהוציא גיטרה וניגן שעה מול חברים אחרי השיעורים',
-  },
-  {
-    image: '/proof/review-igar-2.png',
     imageAlt:
-      'הודעת וואטסאפ מעמית איגר: "כל ההקלטות יצאו מטורף, והאקוסטיקה הייתה פשוט מדהימה"',
+      'הודעת וואטסאפ מנפתלי: "הוצאתי אתמול גיטרה מול כל החברה וניגנתי איזה שעה! אתה מלך ואלוף"',
   },
 ]
 
-/**
- * The marquee holds two copies of whatever it is given. With only a handful of
- * reviews that is narrower than a desktop viewport and a gap appears, so the set
- * is repeated until it is comfortably wider than any screen. Drop the repeat
- * once there are ~8 real reviews.
- */
-const MARQUEE: Testimonial[] = [...REVIEWS, ...REVIEWS, ...REVIEWS]
-
 export default function Proof() {
   return (
-    <div id="proof" className="border-y border-line">
+    // The silver ombré lives on the wrapper so the section keeps its place in
+    // the alternating down/up chain; the component itself stays transparent.
+    <div id="proof" className="silver-down">
       <SocialProofSection
         eyebrow={PROOF.eyebrow}
         heading={PROOF.title}
         videos={VIDEOS}
-        testimonials={MARQUEE}
-        background="#f6f4f1"
+        testimonials={REVIEWS}
+        background="transparent"
         speed={45}
         placeholder={{ title: 'מקום שמור', subtitle: 'לסרטון ההמלצה הבא' }}
       />

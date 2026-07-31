@@ -3,17 +3,18 @@ import ScrollReveal from './ScrollReveal'
 interface SectionHeadingProps {
   eyebrow: string
   title: string
+  /** Words inside `title` to set in accent — the "keyword serif" treatment. */
   lead?: string
-  /** Center the block (used by the wider, more "statement" sections). */
   align?: 'start' | 'center'
+  tone?: 'light' | 'dark'
   className?: string
 }
 
 /**
  * Shared section header: eyebrow + <h2> + optional lead paragraph.
  *
- * It owns its own ScrollReveal so the heading and the content grid below it
- * animate as two separate elements — never wrap a StaggerReveal grid in another
+ * It owns its own ScrollReveal so the heading and the content below animate as
+ * two separate elements — never wrap a StaggerReveal grid in another
  * ScrollReveal, the two opacity tweens fight each other.
  */
 export default function SectionHeading({
@@ -21,19 +22,34 @@ export default function SectionHeading({
   title,
   lead,
   align = 'start',
+  tone = 'light',
   className = '',
 }: SectionHeadingProps) {
   const centered = align === 'center'
+  const dark = tone === 'dark'
 
   return (
-    <ScrollReveal className={`${centered ? 'mx-auto max-w-2xl text-center' : 'max-w-2xl'} ${className}`}>
-      <p className="mb-3 text-[13px] font-bold uppercase tracking-[0.18em] text-accent">
-        {eyebrow}
-      </p>
-      <h2 className="text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold leading-[1.15] tracking-tight text-ink">
+    <ScrollReveal
+      className={`${centered ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'} ${className}`}
+    >
+      <p className={`eyebrow mb-5 ${dark ? 'text-accent-lit' : ''}`}>{eyebrow}</p>
+      <h2
+        className={
+          'display text-[clamp(2.5rem,6vw,4.5rem)] ' + (dark ? 'text-white' : 'text-ink')
+        }
+      >
         {title}
       </h2>
-      {lead && <p className="mt-4 text-[17px] leading-relaxed text-muted">{lead}</p>}
+      {lead && (
+        <p
+          className={
+            'mt-7 text-[clamp(1.0625rem,1.6vw,1.3125rem)] leading-relaxed ' +
+            (dark ? 'text-white/70' : 'text-muted')
+          }
+        >
+          {lead}
+        </p>
+      )}
     </ScrollReveal>
   )
 }

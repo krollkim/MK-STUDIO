@@ -4,15 +4,30 @@
     "language": "Hebrew (he-IL), RTL",
     "tone": "ביטחון, יצירה, מקצועיות. חם ואישי — מדבר אל היוצר, לא אל 'לקוח'. בלי ז'רגון, בלי הבטחות ריקות.",
     "colors": {
-      "bg": "#ffffff",
-      "surface": "#f6f4f1",
-      "surface2": "#ece7e1",
-      "ink": "#14161a",
-      "muted": "#6c7178",
-      "line": "#e4dfd8",
-      "primary": "#181b1f",
-      "accent": "#b07a45",
-      "whatsapp": "#25d366"
+      "_note": "בסיס כסף חמים (greige/שמפניה) שנשאב מהלוגו; עץ האולפן כאקסנט וטקסטורה; שחור רך; ענבר שרוף יחיד ל-CTA ולסימונים.",
+      "bg": "#f4f1eb",
+      "surface": "#fbf9f5",
+      "surface2": "#e9e2d6",
+      "night": "#1b1815",
+      "night2": "#2a2420",
+      "ink": "#1a1917",
+      "muted": "#6e6960",
+      "line": "#ddd5c7",
+      "wood": "#7a5433",
+      "woodSoft": "#d8c3a6",
+      "accent": "#b34e24",
+      "accentHover": "#9c421c",
+      "accentSoft": "#f0e2d5",
+      "accentLit": "#e39264"
+    },
+    "typography": {
+      "display": "Frank Ruhl Libre — סריף עברי לכותרות",
+      "body": "Heebo — סאנס לגוף ולממשק",
+      "_note": "הקונטרסט סריף–סאנס הוא הנשמה של העיצוב. כותרות תמיד ב-.display."
+    },
+    "cta_system": {
+      "_note": "CTA אחד בלבד באתר: רקע accent, טקסט לבן, אייקון וואטסאפ. זהה בניווט, בסקשנים, בפוטר ובכפתור הצף. אין וריאנט צבע שני — צבע נוסף מתחיל לספר למבקר שיש יותר מפעולה אחת.",
+      "contrast": "לבן על #b34e24 = 5.2:1 (AA). accent על הבסיס הכסוף = 4.7:1 (AA)."
     },
     "motion_stack": "GSAP + ScrollTrigger. סקשן החלל משתמש ב-pin + scrub לרצף 'החלל קם לחיים'.",
     "performance_note": "מובייל-first. כל אנימציה נסוגה תחת prefers-reduced-motion ומתחת ל-1024px ה-pin מוחלף בגריד סטטי."

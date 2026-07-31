@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <>
       <StructuredData />
-      <Navbar />
+      <Navbar overDarkHero />
       <main id="main">
         <Hero />
         <Audience />

@@ -7,7 +7,7 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-line bg-surface px-5 py-12 sm:px-8">
+    <footer className="silver-down px-5 py-16 sm:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-9 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-3">
           <Logo size={40} />
@@ -21,7 +21,7 @@ export default function Footer() {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 font-semibold text-ink transition-colors hover:text-accent"
+            className="inline-flex items-center gap-2 font-semibold text-accent-ink transition-colors hover:text-accent"
           >
             <WhatsAppIcon size={16} />
             וואטסאפ

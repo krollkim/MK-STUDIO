@@ -3,25 +3,68 @@
 /* ============================================================
    M.K Studio — Tailwind v4 CSS-first theme (NO tailwind.config.ts).
    Tokens here auto-generate utilities: bg-surface, text-muted, border-line…
-   Palette: light, airy, minimal. Graphite ink + a single brass accent.
+
+   Palette, pulled from the studio itself:
+     · base    — warm silver / greige (the light logo, not milky white)
+     · wood    — the oak of the desk and the acoustic panels
+     · ink     — soft black, never #000
+     · accent  — ONE burnt amber. CTA + small marks only.
    ============================================================ */
 @theme {
-  --color-bg: #ffffff;
-  --color-surface: #f6f4f1;
-  --color-surface-2: #ece7e1;
-  --color-ink: #14161a;
-  --color-muted: #6c7178;
-  --color-line: #e4dfd8;
-  --color-primary: #181b1f;
-  --color-accent: #b07a45;
-  --color-accent-soft: #f4e9dd;
-  --color-whatsapp: #25d366;
+  /* Brushed-silver field. Sections ombré between these two stops, so the
+     silver reads as a lit metal surface instead of a flat grey fill. */
+  --color-silver-0: #f3f2ef;
+  --color-silver-1: #dad8d2;
+
+  --color-bg: #f3f2ef;
+  /* Raised panels sit LIGHTER than the field, not darker. */
+  --color-surface: #fbfaf8;
+  --color-surface-2: #e4e2dc;
+  /* Deep warm ground for the cinematic hero / contact blocks. */
+  --color-night: #1b1815;
+  --color-night-2: #2a2420;
+
+  --color-ink: #1a1917;
+  /* Dark enough to clear AA (4.9:1) against the DEEPEST point of the ombré. */
+  --color-muted: #5c5952;
+  --color-line: #d3d0c8;
+
+  /* Wood — accent + texture, never large flat fields. */
+  --color-wood: #7a5433;
+  --color-wood-soft: #d8c3a6;
+
+  /* ---- Amber. Not a flat orange: a reddish burnt body with a golden
+     catch-light, the way the stone actually reads. See the .btn-amber /
+     .amber-* utilities below for how the four stops are used. ---- */
+  --color-amber-deep: #7c2e12; /* reddish depth */
+  --color-amber-mid: #b5541f; /* body — the lightest amber safe under white text */
+  --color-amber-lit: #f4a63a; /* golden highlight — halo and rims only */
+  --color-amber-glow: #fbc56e; /* strongest catch-light */
+
+  /* Flat fallbacks, still used where a gradient makes no sense. */
+  --color-accent: #b5541f;
+  --color-accent-soft: #f0e2d5;
+  /* Accent TEXT on silver — eyebrows, inline links. This is REAL text, not
+     decoration, so it is pinned by the 4.5:1 floor against the darkest point
+     of the ombré (#dad8d2). #9c3f17 is about as light as amber can go there
+     (4.7:1); anything brighter fails. The glowing end of the ramp is
+     therefore reserved for the decorations, which carry no information. */
+  --color-accent-ink: #9c3f17;
+  /* Lighter sibling for accent text sitting on the night ground. */
+  --color-accent-lit: #e39264;
 
   --font-sans: "Heebo", system-ui, sans-serif;
+  /* Hebrew serif for display type — the "voice" half of the pairing. */
+  --font-serif: "Frank Ruhl Libre", "Heebo", Georgia, serif;
 
   --radius-pill: 999px;
   --radius-card: 20px;
   --radius-xl2: 28px;
+  --radius-hero: 36px;
+
+  /* Soft, warm elevation — images float rather than sit in boxes. */
+  --shadow-float: 0 40px 80px -48px rgb(43 33 24 / 0.45), 0 8px 24px -16px rgb(43 33 24 / 0.25);
+  --shadow-float-lg: 0 60px 120px -50px rgb(43 33 24 / 0.55), 0 12px 32px -18px rgb(43 33 24 / 0.28);
 }
 
 /* ===== Base ===== */
@@ -47,6 +90,173 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   Display type. The serif carries the headlines; Heebo carries the prose.
+   Hebrew serifs need a touch more line-height than a Latin serif at the
+   same size, and negative tracking keeps the big sizes from drifting apart.
+   ============================================================ */
+.display {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+}
+
+.display-sm {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+/* Small all-caps label above a heading. Uses the deeper accent because it can
+   land on the dark end of the ombré. */
+.eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent-ink);
+}
+
+/* ============================================================
+   Brushed-silver sections.
+
+   Each light section ombrés between the two silver stops, and consecutive
+   sections ALTERNATE direction (down → up → down …) so the dark end of one
+   meets the dark end of the next. That removes the banding you would get from
+   repeating the same top-light/bottom-dark ramp, and the whole page reads as
+   one continuous sheet of metal rather than a stack of panels.
+
+   A soft white radial bloom sits at the light end — the Apple-style "lit from
+   above" cue that stops the gradient from looking like flat grey.
+   ============================================================ */
+.silver-down {
+  background-image:
+    radial-gradient(115% 65% at 50% 0%, rgb(255 255 255 / 0.75), transparent 62%),
+    linear-gradient(180deg, var(--color-silver-0) 0%, var(--color-silver-1) 100%);
+}
+
+.silver-up {
+  background-image:
+    radial-gradient(115% 65% at 50% 100%, rgb(255 255 255 / 0.75), transparent 62%),
+    linear-gradient(180deg, var(--color-silver-1) 0%, var(--color-silver-0) 100%);
+}
+
+/* ============================================================
+   Amber — depth, not flat orange.
+
+   ⚠️ Why the in-button gradient stops at --color-amber-mid and never reaches
+   --color-amber-lit: white on #f4a63a measures 2.0:1, and even the midpoint
+   #e49635 only reaches 2.4:1 — both far below AA. #b5541f is the lightest
+   amber that still clears 4.5:1 under white (4.9:1). So the golden lives in
+   the halo and in the 1px top rim, where no text ever sits, and the button
+   body stays in the safe half. The gemstone read survives; the label stays
+   legible.
+   ============================================================ */
+/* These live in @layer components on purpose. Tailwind emits its utilities
+   layer AFTER components, so `fixed` on the floating button still beats the
+   `position: relative` below. Unlayered, this rule would win and knock the
+   float out of its corner into the document flow. */
+@layer components {
+  /* ---- CTA ------------------------------------------------------------
+     Every CTA must render identically. The stops are LINEAR with percentage
+     positions, which is the whole point: a radial gradient sized in percent
+     is relative to the element's box, so a wide pill and a round 56px float
+     show different slices of it and stop matching. Linear ramps are
+     aspect-independent, so the nav button, the section buttons and the float
+     are the same object at different sizes.
+
+     The golden catch-light is a top glaze that fades out by 22% — above every
+     button's text padding at every size — so the label always sits on the
+     body colour, never on the highlight. That is what keeps white legible
+     while the stone still catches light.
+     -------------------------------------------------------------------- */
+  .btn-amber {
+    position: relative;
+    isolation: isolate;
+    color: #fff;
+    /* The resting gradient lives on the element itself, NOT on a z-index:-1
+       pseudo. A negative-z pseudo only stays inside the button if the button
+       reliably forms its own stacking context; inside the navbar — which has
+       its own via backdrop-filter — it slipped behind the bar's background
+       and the button rendered as a bare outline. Painting the base directly
+       removes that whole failure mode. */
+    background-image:
+      linear-gradient(to bottom, rgb(244 166 58 / 0.5) 0%, rgb(244 166 58 / 0) 22%),
+      linear-gradient(105deg, var(--color-amber-deep) 0%, var(--color-amber-mid) 100%);
+    /* Warm, soft halo — deliberately not a neon ring. On a silver-and-wood
+       palette a hot glow reads cheap; this reads lit. */
+    box-shadow:
+      inset 0 1px 0 rgb(251 197 110 / 0.55),
+      0 6px 22px rgb(124 46 18 / 0.28),
+      0 0 26px rgb(244 166 58 / 0.22);
+    transition: box-shadow 0.35s ease, transform 0.2s ease;
+  }
+
+  /* Hover layer, cross-faded on opacity: a gradient cannot be animated
+     smoothly, an opacity can. Reversing the body ramp and lifting the
+     catch-light reads as the light travelling across the stone. */
+  .btn-amber::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: 0;
+    background-image:
+      linear-gradient(to bottom, rgb(251 197 110 / 0.68) 0%, rgb(251 197 110 / 0) 22%),
+      linear-gradient(105deg, var(--color-amber-mid) 0%, var(--color-amber-deep) 100%);
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+
+  /* The label sits above the hover layer. Required: ::after is the last child,
+     so at equal z-index it would paint over the text. */
+  .btn-amber > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-amber:hover::after {
+    opacity: 1;
+  }
+
+  .btn-amber:hover {
+    box-shadow:
+      inset 0 1px 0 rgb(251 197 110 / 0.75),
+      0 10px 28px rgb(124 46 18 / 0.34),
+      0 0 34px rgb(244 166 58 / 0.32);
+  }
+
+  /* ---- Decoration -----------------------------------------------------
+     These carry the FULL ramp, all the way up to the golden end. That is
+     the difference from the CTA: nothing is ever read on top of them, so
+     the bright half is free to actually be bright. Every element using
+     these is aria-hidden — index numerals, quote glyphs, dots, rails —
+     which is what makes them "pure decoration" under WCAG 1.4.3 and exempt
+     from the contrast floor that pins the button and the eyebrow down.
+     -------------------------------------------------------------------- */
+  .amber-fill {
+    background-image: linear-gradient(
+      120deg,
+      var(--color-amber-mid) 0%,
+      var(--color-amber-lit) 100%
+    );
+  }
+
+  .amber-text {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-amber-deep) 0%,
+      var(--color-amber-mid) 42%,
+      var(--color-amber-lit) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 /* Visible focus ring for keyboard users, everywhere. */

@@ -50,16 +50,15 @@ export default function AccessibilityPage() {
   return (
     <>
       <Navbar />
-      <main id="main" className="bg-bg px-5 pt-32 pb-20 sm:px-8 lg:pt-40">
+      <main id="main" className="silver-down px-5 pt-32 pb-24 sm:px-8 lg:pt-44">
         <article className="mx-auto max-w-3xl">
-          <h1 className="text-[clamp(2rem,5vw,3rem)] font-extrabold leading-tight tracking-tight text-ink">
-            הצהרת נגישות
-          </h1>
-          <p className="mt-4 text-sm text-muted">עודכן לאחרונה: {LAST_UPDATED}</p>
+          <p className="eyebrow mb-5">נגישות</p>
+          <h1 className="display text-[clamp(2.5rem,6vw,4rem)] text-ink">הצהרת נגישות</h1>
+          <p className="mt-5 text-sm text-muted">עודכן לאחרונה: {LAST_UPDATED}</p>
 
           {SECTIONS.map((section) => (
-            <section key={section.title} className="mt-12">
-              <h2 className="text-2xl font-bold text-ink">{section.title}</h2>
+            <section key={section.title} className="mt-14">
+              <h2 className="display-sm text-[1.75rem] text-ink">{section.title}</h2>
 
               {section.paragraphs?.map((p) => (
                 <p key={p.slice(0, 24)} className="mt-4 leading-relaxed text-muted">
@@ -68,10 +67,13 @@ export default function AccessibilityPage() {
               ))}
 
               {section.list && (
-                <ul className="mt-4 space-y-2.5">
+                <ul className="mt-5 space-y-3">
                   {section.list.map((item) => (
-                    <li key={item.slice(0, 24)} className="flex gap-3 leading-relaxed text-muted">
-                      <span aria-hidden="true" className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                    <li key={item.slice(0, 24)} className="flex gap-3.5 leading-relaxed text-muted">
+                      <span
+                        aria-hidden="true"
+                        className="amber-fill mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      />
                       {item}
                     </li>
                   ))}
@@ -80,19 +82,19 @@ export default function AccessibilityPage() {
             </section>
           ))}
 
-          <section className="mt-12 rounded-card border border-line bg-surface p-7">
-            <h2 className="text-2xl font-bold text-ink">פניות בנושא נגישות</h2>
+          <section className="mt-14 rounded-card border border-line bg-surface p-8">
+            <h2 className="display-sm text-[1.75rem] text-ink">פניות בנושא נגישות</h2>
             <p className="mt-4 leading-relaxed text-muted">
               נתקלתם בבעיית נגישות באתר, או שיש לכם הצעה לשיפור? נשמח מאוד לשמוע. רכז הנגישות שלנו
               הוא {STUDIO.owner}, ואנחנו משתדלים לטפל בכל פנייה בהקדם האפשרי.
             </p>
-            <ul className="mt-5 space-y-2.5">
+            <ul className="mt-6 space-y-3">
               <li>
                 <a
                   href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-semibold text-ink underline underline-offset-4 transition-colors hover:text-accent"
+                  className="font-semibold text-accent-ink underline underline-offset-4 transition-colors hover:text-accent"
                 >
                   פנייה בוואטסאפ
                 </a>
@@ -109,7 +111,7 @@ export default function AccessibilityPage() {
             </ul>
           </section>
 
-          <p className="mt-10">
+          <p className="mt-12">
             <Link
               href="/"
               className="font-semibold text-ink underline underline-offset-4 transition-colors hover:text-accent"

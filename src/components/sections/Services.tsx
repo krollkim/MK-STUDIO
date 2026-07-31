@@ -2,59 +2,67 @@ import Image from 'next/image'
 import SectionHeading from '@/components/SectionHeading'
 import ScrollReveal from '@/components/ScrollReveal'
 import StaggerReveal from '@/components/StaggerReveal'
+import AmbientWord from '@/components/AmbientWord'
 import WhatsAppCTA from '@/components/WhatsAppCTA'
 import { SERVICES } from '@/lib/content'
 
-/** Section 3 — the three services, then the single outcome they all lead to. */
+/**
+ * Section 3 — the three services as an editorial list, then the outcome as a
+ * warm-dark statement block with the brand poster floating beside it.
+ */
 export default function Services() {
   return (
-    <section id="services" className="bg-surface px-5 py-20 sm:px-8 lg:py-28">
-      <div className="mx-auto max-w-6xl">
+    <section
+      id="services"
+      className="silver-up relative overflow-hidden px-5 py-28 sm:px-8 lg:py-40"
+    >
+      <AmbientWord position="start" className="top-24">
+        צליל
+      </AmbientWord>
+
+      <div className="relative mx-auto max-w-6xl">
         <SectionHeading eyebrow={SERVICES.eyebrow} title={SERVICES.title} lead={SERVICES.lead} />
 
-        <StaggerReveal columns={3} className="mt-14 grid gap-5 lg:grid-cols-3">
-          {SERVICES.items.map((item, i) => (
+        <StaggerReveal columns={1} stagger={0.1} className="mt-20 flex flex-col">
+          {SERVICES.items.map((item) => (
             <article
               key={item.title}
-              className="flex flex-col rounded-card border border-line bg-bg p-7 transition-shadow hover:shadow-[0_24px_50px_-36px_rgba(20,22,26,0.55)]"
+              className="group grid gap-x-12 gap-y-5 border-t border-line py-11 lg:grid-cols-[24rem_1fr] lg:py-16"
             >
-              <span
-                aria-hidden="true"
-                className="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-sm font-bold text-accent"
-              >
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h3 className="text-xl font-bold text-ink">{item.title}</h3>
-              <p className="mt-3 leading-relaxed text-muted">{item.body}</p>
-              <ul className="mt-5 flex flex-wrap gap-2 border-t border-line pt-5">
-                {item.bullets.map((b) => (
-                  <li
-                    key={b}
-                    className="rounded-pill bg-surface px-3 py-1 text-[13px] font-medium text-muted"
-                  >
-                    {b}
-                  </li>
-                ))}
-              </ul>
+              <h3 className="display-sm text-[clamp(1.75rem,3.4vw,2.5rem)] text-ink transition-colors group-hover:text-accent">
+                {item.title}
+              </h3>
+
+              <div>
+                <p className="max-w-2xl text-[17px] leading-relaxed text-muted">{item.body}</p>
+                <ul className="mt-6 flex flex-wrap gap-x-7 gap-y-2.5 text-sm font-medium text-ink/60">
+                  {item.bullets.map((b) => (
+                    <li key={b} className="flex items-center gap-2.5">
+                      <span aria-hidden="true" className="amber-fill h-1.5 w-1.5 rounded-full" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </article>
           ))}
         </StaggerReveal>
 
         {/* The outcome — what the visitor actually walks away with. */}
-        <ScrollReveal className="mt-16">
-          <div className="grid items-center gap-10 overflow-hidden rounded-xl2 border border-line bg-bg lg:grid-cols-2">
-            <div className="p-8 sm:p-11">
-              <p className="mb-3 text-[13px] font-bold uppercase tracking-[0.18em] text-accent">
-                {SERVICES.outcome.eyebrow}
-              </p>
-              <h3 className="text-[clamp(1.5rem,3vw,2.1rem)] font-extrabold leading-tight text-ink">
+        <ScrollReveal className="mt-24 lg:mt-32">
+          <div className="relative grid items-center gap-12 rounded-hero bg-night px-7 py-14 sm:px-12 lg:grid-cols-[1fr_20rem] lg:gap-16 lg:px-16 lg:py-20">
+            <div>
+              <p className="eyebrow mb-5 text-accent-lit">{SERVICES.outcome.eyebrow}</p>
+              <h3 className="display text-[clamp(2rem,4.2vw,3.25rem)] text-white">
                 {SERVICES.outcome.title}
               </h3>
-              <p className="mt-4 leading-relaxed text-muted">{SERVICES.outcome.body}</p>
+              <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white/70">
+                {SERVICES.outcome.body}
+              </p>
 
-              <ul className="mt-6 space-y-3">
+              <ul className="mt-9 space-y-4">
                 {SERVICES.outcome.points.map((p) => (
-                  <li key={p} className="flex gap-3 text-[15px] leading-relaxed text-ink">
+                  <li key={p} className="flex gap-3.5 text-[16px] leading-relaxed text-white/90">
                     <svg
                       width="20"
                       height="20"
@@ -65,7 +73,7 @@ export default function Services() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       aria-hidden="true"
-                      className="mt-0.5 shrink-0 text-accent"
+                      className="mt-1 shrink-0 text-accent-lit"
                     >
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
@@ -74,17 +82,17 @@ export default function Services() {
                 ))}
               </ul>
 
-              <WhatsAppCTA className="mt-8" />
+              <WhatsAppCTA className="mt-11" />
             </div>
 
-            {/* The brandmark is a square poster — keep the panel square so the
-                lettering is never cropped. */}
-            <div className="relative order-first aspect-square lg:order-last">
+            {/* The brandmark is a square poster — a square frame keeps the
+                lettering intact, and it floats rather than sitting in a box. */}
+            <div className="relative aspect-square overflow-hidden rounded-card shadow-float-lg lg:rotate-2">
               <Image
                 src="/images/studio-brandmark.webp"
                 alt="גרפיקת המותג של M.K Studio — עמדת ההקלטה עם מיקרופון, מוניטורים, פסנתר וגיטרות"
                 fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
+                sizes="(max-width: 1024px) 100vw, 20rem"
                 className="object-cover"
               />
             </div>

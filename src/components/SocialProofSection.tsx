@@ -54,6 +54,13 @@ export interface VideoTestimonial {
   color?: string;
   /** Short pull-quote under the video. */
   quote?: string;
+  /**
+   * Focal point for the 9:16 crop, as a CSS `object-position` value
+   * (e.g. "82% center"). Landscape source footage loses most of its width to
+   * the portrait frame, so without this the subject can end up off-crop.
+   * Defaults to "center".
+   */
+  objectPosition?: string;
 }
 
 /** Empty-slot copy, so non-English pages can localize the placeholder card. */
@@ -79,6 +86,12 @@ export interface Testimonial {
   /** Optional cropped screenshot. When set, the image is shown instead of a bubble. */
   image?: string;
   imageAlt?: string;
+  /**
+   * Redact the sender: blank bars replace the avatar and the name. Use when a
+   * real customer agreed to the quote but not to being identified — it reads as
+   * protecting a real person, which builds more trust than inventing a name.
+   */
+  anonymous?: boolean;
 }
 
 export interface SocialProofSectionProps {
@@ -131,6 +144,11 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
   { name: "Omar H.",   text: "Clean, fast, just works.", time: "17:22" },
   { name: "Ruben P.",  text: "My whole team is obsessed 🔥", time: "18:05" },
 ];
+
+/** Runaway guard for the marquee's auto-repeat. */
+const MAX_REPEAT = 24;
+/** Below this a sticker hasn't laid out yet (images still loading). */
+const MIN_STICKER_WIDTH = 40;
 
 /** Bubble max-width by message length, so each sticker fits its message. */
 function maxWidthFor(text: string | undefined): number {
@@ -198,6 +216,7 @@ function VideoPillar({
             playsInline
             preload="metadata"
             onEnded={onEnded}
+            style={{ objectPosition: v.objectPosition ?? "center" }}
             className="absolute inset-0 h-full w-full object-cover"
           />
         ) : (
@@ -265,36 +284,70 @@ function VideoPillar({
 
 /* ------------------------------- sticker -------------------------------- */
 
+/** Blank redaction bar, WhatsApp-grey so it reads as deliberate, not broken. */
+function RedactionBar({ className = "" }: { className?: string }) {
+  return <span aria-hidden="true" className={"block rounded-[3px] bg-[#c3ccd2] " + className} />;
+}
+
+/**
+ * One testimonial in the marquee.
+ *
+ * A testimonial is a message the studio RECEIVED, so it is rendered as an
+ * INCOMING WhatsApp message: white bubble, tail on the reading-start side,
+ * timestamp only. Outgoing chrome — the green bubble and the ✓✓ read receipts —
+ * is deliberately absent: ✓✓ on a customer review silently says "the studio
+ * sent this to itself", which costs more trust than the detail buys.
+ *
+ * Nothing forces a uniform height. Real messages are different lengths and
+ * that unevenness is most of what makes them read as genuine, so the sticker
+ * sizes to its own content and only the width is capped.
+ */
 function Sticker({ t, index }: { t: Testimonial; index: number }) {
+  const anonymous = t.anonymous ?? false;
+
   return (
     <div className="mr-6 flex shrink-0 flex-col rounded-[20px] bg-white p-[7px] shadow-[0_12px_32px_rgba(11,20,26,0.13),0_2px_5px_rgba(11,20,26,0.08)]">
       {t.image ? (
+        // Real cropped screenshot — always preferred over a recreation.
+        // Capped by WIDTH so each keeps its own natural height.
         <img
           src={t.image}
           alt={t.imageAlt ?? t.name ?? "Customer testimonial"}
-          className="block h-52 w-auto rounded-[14px] object-cover"
+          className="block h-auto w-[26rem] max-w-[78vw] rounded-[14px]"
           draggable={false}
         />
       ) : (
-        <div className="flex flex-col gap-2.5 rounded-[14px] bg-[#efeae2] p-3.5">
+        <div className="flex w-[20rem] max-w-[78vw] flex-col gap-2.5 rounded-[14px] bg-[#efeae2] p-3.5">
           <div className="flex items-center gap-2.5">
-            <div
-              className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full text-[15px] font-semibold text-white"
-              style={{ backgroundColor: t.color ?? AVATAR_PALETTE[index % AVATAR_PALETTE.length] }}
-            >
-              {t.initials ?? initialsFor(t.name, String(index + 1))}
-            </div>
-            <div className="whitespace-nowrap text-base font-semibold text-[#111b21]">{t.name}</div>
+            {anonymous ? (
+              <RedactionBar className="h-[38px] w-[38px] shrink-0 rounded-full" />
+            ) : (
+              <div
+                className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full text-[15px] font-semibold text-white"
+                style={{ backgroundColor: t.color ?? AVATAR_PALETTE[index % AVATAR_PALETTE.length] }}
+              >
+                {t.initials ?? initialsFor(t.name, String(index + 1))}
+              </div>
+            )}
+
+            {anonymous ? (
+              <RedactionBar className="h-3.5 w-24" />
+            ) : (
+              <div className="whitespace-nowrap text-base font-semibold text-[#111b21]">
+                {t.name}
+              </div>
+            )}
           </div>
-          <div className="flex justify-end">
+
+          {/* Incoming: white bubble, tail on the start edge, time only. */}
+          <div className="flex justify-start">
             <div
-              className="rounded-[10px] rounded-tr-[3px] bg-[#d9fdd3] px-[11px] pb-1.5 pt-2"
+              className="rounded-[10px] rounded-ss-[3px] bg-white px-[11px] pb-1.5 pt-2 shadow-[0_1px_0.5px_rgba(11,20,26,0.13)]"
               style={{ maxWidth: maxWidthFor(t.text) }}
             >
               <div className="text-[16.5px] leading-normal text-[#111b21]">{t.text}</div>
-              <div className="mt-1 flex items-center justify-end gap-1">
+              <div className="mt-1 flex items-center justify-end">
                 {t.time && <span className="text-[12.5px] text-[#667781]">{t.time}</span>}
-                <span className="text-[13.5px] font-bold tracking-[-3px] text-[#53bdeb]">✓✓</span>
               </div>
             </div>
           </div>
@@ -318,24 +371,51 @@ export default function SocialProofSection({
   placeholder = DEFAULT_PLACEHOLDER,
   className = "",
 }: SocialProofSectionProps) {
+  const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const tweenRef = useRef<gsap.core.Tween | null>(null);
   const playingRef = useRef<HTMLVideoElement | null>(null);
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  /** How many times the list is repeated to make ONE block. See below. */
+  const [repeat, setRepeat] = useState(1);
 
   useLayoutEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
+    const viewport = viewportRef.current;
+    if (!track || !viewport) return;
 
     const build = () => {
       tweenRef.current?.kill();
       gsap.set(track, { x: 0 });
-      // The track holds two identical copies, so half its width is one full set.
-      const half = track.scrollWidth / 2;
-      if (!half) return;
+
+      // The track renders two identical blocks, so half its width is one block.
+      const blockWidth = track.scrollWidth / 2;
+      const unit = blockWidth / repeat;
+      // Bail until the images have laid out — a sticker is never this narrow,
+      // and measuring mid-load would blow `repeat` up before settling back.
+      if (unit < MIN_STICKER_WIDTH) return;
+
+      // The tween slides the track by exactly one block, so a block MUST be at
+      // least as wide as the viewport — otherwise the trailing edge runs out
+      // mid-travel and a blank strip opens up. With only a handful of
+      // testimonials one copy of the list is far narrower than a desktop
+      // viewport, so repeat the list until a block overflows the container.
+      const needed = Math.max(
+        1,
+        Math.min(MAX_REPEAT, Math.ceil(viewport.offsetWidth / unit))
+      );
+      if (needed !== repeat) {
+        setRepeat(needed);
+        return;
+      }
+
+      // RTL lays the track flush against the RIGHT edge and overflows leftward,
+      // so it has to travel right to keep the container covered; LTR mirrors it.
+      const rtl = getComputedStyle(track).direction === "rtl";
+
       tweenRef.current = gsap.to(track, {
-        x: -half,
-        duration: half / speed,
+        x: rtl ? blockWidth : -blockWidth,
+        duration: blockWidth / speed,
         ease: "none",
         repeat: -1,
       });
@@ -345,12 +425,13 @@ export default function SocialProofSection({
 
     const ro = new ResizeObserver(() => build());
     ro.observe(track);
+    ro.observe(viewport);
 
     return () => {
       ro.disconnect();
       tweenRef.current?.kill();
     };
-  }, [speed, testimonials]);
+  }, [speed, testimonials, repeat]);
 
   const setTimeScale = (value: number) => {
     if (tweenRef.current) gsap.to(tweenRef.current, { timeScale: value, duration: 0.4 });
@@ -363,18 +444,20 @@ export default function SocialProofSection({
     setPlayingIndex(index);
   };
 
-  const loop = [...testimonials, ...testimonials];
+  // One block = the list repeated until it overflows the container; the track
+  // holds two of them so the tween can slide by exactly one block and land on
+  // an identical frame.
+  const block = Array.from({ length: repeat }, () => testimonials).flat();
+  const loop = [...block, ...block];
 
   return (
     <section className={"w-full py-16 " + className} style={{ backgroundColor: background }}>
       {showVideos && (
         <div className="mx-auto max-w-[1120px] px-8">
           <div className="flex flex-col items-center gap-2.5 text-center">
-            {eyebrow && (
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#3a8f74]">{eyebrow}</span>
-            )}
+            {eyebrow && <span className="eyebrow">{eyebrow}</span>}
             {heading && (
-              <h2 className="text-[clamp(28px,3.6vw,40px)] font-bold leading-tight tracking-tight text-[#111b21]">
+              <h2 className="display text-[clamp(2.25rem,5vw,3.75rem)] text-ink">
                 {heading}
               </h2>
             )}
@@ -396,19 +479,17 @@ export default function SocialProofSection({
         </div>
       )}
 
+      {/* No edge mask: the strip runs to both edges and simply scrolls off. */}
       <div
-        className="relative mt-13 w-full overflow-hidden py-8"
-        style={{
-          marginTop: showVideos ? 52 : 0,
-          maskImage:
-            "linear-gradient(to right, transparent, #000 140px, #000 calc(100% - 140px), transparent)",
-          WebkitMaskImage:
-            "linear-gradient(to right, transparent, #000 140px, #000 calc(100% - 140px), transparent)",
-        }}
+        ref={viewportRef}
+        className="relative w-full overflow-hidden py-8"
+        style={{ marginTop: showVideos ? 52 : 0 }}
         onMouseEnter={() => pauseOnHover && setTimeScale(0)}
         onMouseLeave={() => pauseOnHover && setTimeScale(1)}
       >
-        <div ref={trackRef} className="flex w-max">
+        {/* items-center: stickers keep their natural heights and sit on a
+            shared centre line rather than being stretched to match. */}
+        <div ref={trackRef} className="flex w-max items-center">
           {loop.map((t, i) => (
             <Sticker key={i} t={t} index={i % testimonials.length} />
           ))}

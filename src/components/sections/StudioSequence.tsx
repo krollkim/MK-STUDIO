@@ -79,8 +79,8 @@ export default function StudioSequence() {
   }, [])
 
   return (
-    <section id="space" className="bg-bg">
-      <div className="mx-auto max-w-6xl px-5 pt-20 sm:px-8 lg:pt-28">
+    <section id="space" className="silver-down">
+      <div className="mx-auto max-w-6xl px-5 pt-28 sm:px-8 lg:pt-40">
         <SectionHeading eyebrow={SPACE.eyebrow} title={SPACE.title} lead={SPACE.lead} />
       </div>
 
@@ -97,7 +97,7 @@ export default function StudioSequence() {
             <ol className="mb-8 flex gap-2" aria-hidden="true">
               {SPACE.steps.map((step) => (
                 <li key={step.title} className="h-0.5 flex-1 overflow-hidden rounded-pill bg-line">
-                  <span data-dot className="block h-full origin-right bg-accent" />
+                  <span data-dot className="amber-fill block h-full origin-right" />
                 </li>
               ))}
             </ol>
@@ -111,17 +111,19 @@ export default function StudioSequence() {
                   className="gpu absolute inset-x-0 top-0"
                   aria-hidden={i > 0 ? 'true' : undefined}
                 >
-                  <p className="mb-2 text-[13px] font-bold uppercase tracking-[0.18em] text-accent">
+                  <p className="eyebrow mb-4">
                     שלב {i + 1} מתוך {SPACE.steps.length}
                   </p>
-                  <h3 className="text-3xl font-extrabold leading-tight text-ink">{step.title}</h3>
-                  <p className="mt-3 leading-relaxed text-muted">{step.caption}</p>
+                  <h3 className="display text-[clamp(2.25rem,3.4vw,3rem)] text-ink">
+                    {step.title}
+                  </h3>
+                  <p className="mt-4 text-[17px] leading-relaxed text-muted">{step.caption}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="relative aspect-16/10 overflow-hidden rounded-xl2 bg-surface">
+          <div className="relative aspect-16/10 overflow-hidden rounded-hero bg-surface shadow-float-lg">
             {SPACE.steps.map((step, i) => (
               <div key={step.title} data-frame className="gpu absolute inset-0">
                 <Image
@@ -139,10 +141,16 @@ export default function StudioSequence() {
       </div>
 
       {/* ---------- Mobile / reduced-motion: plain stacked sequence ---------- */}
-      <ol className="mx-auto mt-12 grid max-w-6xl gap-10 px-5 pb-20 sm:px-8 lg:hidden">
+      <ol className="mx-auto mt-16 grid max-w-6xl gap-16 px-5 pb-28 sm:px-8 lg:hidden">
         {SPACE.steps.map((step, i) => (
           <li key={step.title}>
-            <div className="relative aspect-4/3 overflow-hidden rounded-card bg-surface">
+            {/* Alternating tilt so the stack reads as scattered frames, not a grid. */}
+            <div
+              className={
+                'relative aspect-4/3 overflow-hidden rounded-card bg-surface shadow-float ' +
+                (i % 2 === 0 ? '-rotate-1' : 'rotate-1')
+              }
+            >
               <Image
                 src={`${step.image}.webp`}
                 alt={step.alt}
@@ -151,11 +159,11 @@ export default function StudioSequence() {
                 className="object-cover"
               />
             </div>
-            <p className="mt-4 text-[13px] font-bold uppercase tracking-[0.18em] text-accent">
+            <p className="eyebrow mt-7">
               שלב {i + 1} מתוך {SPACE.steps.length}
             </p>
-            <h3 className="mt-1 text-2xl font-extrabold text-ink">{step.title}</h3>
-            <p className="mt-2 leading-relaxed text-muted">{step.caption}</p>
+            <h3 className="display-sm mt-2 text-3xl text-ink">{step.title}</h3>
+            <p className="mt-3 text-[17px] leading-relaxed text-muted">{step.caption}</p>
           </li>
         ))}
       </ol>

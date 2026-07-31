@@ -1,43 +1,50 @@
 import Image from 'next/image'
 import ScrollReveal from '@/components/ScrollReveal'
 import WhatsAppCTA, { WhatsAppIcon } from '@/components/WhatsAppCTA'
+import AmbientWord from '@/components/AmbientWord'
 import { CONTACT } from '@/lib/content'
 import { PHONE_DISPLAY, PHONE_TEL, STUDIO } from '@/lib/site'
 
-/** Section 7b — the repeat CTA and the contact details. The page ends here. */
+/**
+ * Section 7b — the repeat CTA and the contact details. One amber button, same
+ * as everywhere else; the phone stays a quiet outlined link so it never
+ * competes with the WhatsApp path.
+ */
 export default function Contact() {
   return (
-    <section id="contact" className="relative overflow-hidden bg-ink px-5 py-20 sm:px-8 lg:py-28">
+    <section
+      id="contact"
+      className="relative isolate overflow-hidden bg-night px-5 py-28 sm:px-8 lg:py-40"
+    >
       <Image
         src="/images/recording-session.webp"
         alt=""
         aria-hidden="true"
         fill
         sizes="100vw"
-        className="object-cover opacity-20"
+        className="-z-20 object-cover opacity-25"
       />
-      <div aria-hidden="true" className="absolute inset-0 bg-ink/60" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-night/75" />
+      <AmbientWord position="center" tone="dark" className="top-10">
+        נתחיל
+      </AmbientWord>
 
       <ScrollReveal className="relative mx-auto max-w-3xl text-center">
-        <p className="mb-3 text-[13px] font-bold uppercase tracking-[0.18em] text-accent">
-          {CONTACT.eyebrow}
-        </p>
-        <h2 className="text-[clamp(2rem,5vw,3.25rem)] font-extrabold leading-[1.12] tracking-tight text-white">
-          {CONTACT.title}
-        </h2>
-        <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-white/75">
+        <p className="eyebrow mb-5 text-accent-lit">{CONTACT.eyebrow}</p>
+        <h2 className="display text-[clamp(2.75rem,7vw,5.5rem)] text-white">{CONTACT.title}</h2>
+        <p className="mx-auto mt-7 max-w-xl text-[clamp(1.0625rem,1.7vw,1.3125rem)] leading-relaxed text-white/70">
           {CONTACT.subtitle}
         </p>
 
-        <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <WhatsAppCTA variant="green" className="w-full sm:w-auto" />
+        <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-5">
+          <WhatsAppCTA size="lg" className="w-full sm:w-auto" />
           <a
             href={`tel:${PHONE_TEL}`}
-            className="inline-flex w-full items-center justify-center gap-2.5 rounded-pill border border-white/25 px-7 py-3.5 text-base font-bold text-white transition-colors hover:border-white/60 sm:w-auto"
+            className="inline-flex w-full items-center justify-center gap-2.5 rounded-pill border border-white/25 px-8 py-4.5 text-base font-semibold text-white/85 transition-colors hover:border-white/55 hover:text-white sm:w-auto"
           >
             <svg
-              width="20"
-              height="20"
+              width="19"
+              height="19"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -52,21 +59,21 @@ export default function Contact() {
           </a>
         </div>
 
-        <dl className="mx-auto mt-12 grid max-w-xl gap-6 border-t border-white/15 pt-8 text-right sm:grid-cols-2">
+        <dl className="mx-auto mt-16 grid max-w-xl gap-7 border-t border-white/12 pt-9 text-right sm:grid-cols-2">
           <div>
-            <dt className="text-[13px] font-semibold uppercase tracking-[0.14em] text-white/50">
+            <dt className="text-[12px] font-bold uppercase tracking-[0.18em] text-white/45">
               איפה
             </dt>
-            <dd className="mt-1.5 text-white">
+            <dd className="mt-2 text-white/90">
               {STUDIO.neighborhood}, {STUDIO.city}
             </dd>
           </div>
           <div>
-            <dt className="text-[13px] font-semibold uppercase tracking-[0.14em] text-white/50">
+            <dt className="text-[12px] font-bold uppercase tracking-[0.18em] text-white/45">
               הדרך המהירה
             </dt>
-            <dd className="mt-1.5 flex items-start justify-start gap-2 text-white">
-              <span className="mt-1 shrink-0">
+            <dd className="mt-2 flex items-start justify-start gap-2.5 text-white/90">
+              <span className="mt-1 shrink-0 text-accent-lit">
                 <WhatsAppIcon size={16} />
               </span>
               <span>הודעה בוואטסאפ — עונה בדרך כלל תוך כמה שעות</span>

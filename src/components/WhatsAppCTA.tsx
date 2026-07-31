@@ -1,6 +1,6 @@
 import { CTA_LABEL, WHATSAPP_URL } from '@/lib/site'
 
-export function WhatsAppIcon({ size = 22 }: { size?: number }) {
+export function WhatsAppIcon({ size = 20 }: { size?: number }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -15,31 +15,38 @@ export function WhatsAppIcon({ size = 22 }: { size?: number }) {
   )
 }
 
-type Variant = 'solid' | 'green' | 'outline'
+/**
+ * THE call to action. There is exactly one CTA style on this site — burnt
+ * amber, white label, WhatsApp glyph — and it looks identical in the navbar,
+ * in every section, in the footer and on the floating button. `size` changes
+ * the padding, never the colour.
+ *
+ * Deliberately NOT a variant system: a second colour is how a landing page
+ * starts telling the visitor there is more than one thing to do.
+ */
+// `btn-amber` (globals.css) carries the two-layer amber gradient, its
+// cross-fade hover and the warm halo. Nothing here sets a colour.
+const CTA_BASE =
+  'btn-amber group inline-flex items-center justify-center gap-2.5 rounded-pill ' +
+  'font-bold hover:-translate-y-0.5'
 
-const VARIANTS: Record<Variant, string> = {
-  solid: 'bg-primary text-white hover:bg-ink shadow-[0_10px_30px_-12px_rgba(20,22,26,0.6)]',
-  green: 'bg-whatsapp text-[#06301a] hover:brightness-95 shadow-[0_10px_30px_-12px_rgba(37,211,102,0.7)]',
-  outline: 'border border-ink/20 bg-white/70 text-ink hover:border-ink/40 hover:bg-white',
-}
+const SIZES = {
+  sm: 'px-5 py-2.5 text-[15px]',
+  md: 'px-7 py-3.5 text-base',
+  lg: 'px-9 py-4.5 text-[17px]',
+} as const
 
 interface WhatsAppCTAProps {
   label?: string
-  variant?: Variant
-  /** Extra note appended to the prefilled message so you can tell CTAs apart. */
+  size?: keyof typeof SIZES
   href?: string
   className?: string
-  /** Optional context for screen readers when several CTAs share a label. */
   ariaLabel?: string
 }
 
-/**
- * The site's single conversion action: open WhatsApp with a prefilled Hebrew
- * message. Everything routes here — there is no form and no phone-first path.
- */
 export default function WhatsAppCTA({
   label = CTA_LABEL,
-  variant = 'solid',
+  size = 'md',
   href = WHATSAPP_URL,
   className = '',
   ariaLabel,
@@ -50,21 +57,59 @@ export default function WhatsAppCTA({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={ariaLabel ?? `${label} — נפתח בוואטסאפ בחלון חדש`}
-      className={
-        'inline-flex items-center justify-center gap-2.5 rounded-pill px-7 py-3.5 text-base font-bold ' +
-        'transition-all duration-200 hover:-translate-y-0.5 ' +
-        VARIANTS[variant] +
-        ' ' +
-        className
-      }
+      className={`${CTA_BASE} ${SIZES[size]} ${className}`}
     >
-      <WhatsAppIcon />
-      {label}
+      {/* Wrapped in one element so `.btn-amber > *` can lift it above the
+          hover layer — a bare text node cannot take a z-index. */}
+      <span className="inline-flex items-center gap-2.5">
+        <WhatsAppIcon />
+        {label}
+      </span>
     </a>
   )
 }
 
-/** Always-visible floating WhatsApp button (RTL: pinned bottom-left of viewport). */
+/**
+ * Quiet secondary link. Never a filled button — the page has one button colour
+ * and this must not compete with it.
+ */
+export function QuietLink({
+  href,
+  children,
+  onDark = false,
+  className = '',
+}: {
+  href: string
+  children: React.ReactNode
+  onDark?: boolean
+  className?: string
+}) {
+  return (
+    <a
+      href={href}
+      className={
+        'group inline-flex items-center gap-2 text-base font-semibold underline-offset-8 transition-colors ' +
+        (onDark ? 'text-white/75 hover:text-white' : 'text-ink/70 hover:text-accent') +
+        ` ${className}`
+      }
+    >
+      {children}
+      {/* RTL: "forward" is leftward. */}
+      <span aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-1">
+        ←
+      </span>
+    </a>
+  )
+}
+
+/**
+ * Floating CTA — same amber as every other CTA, mark only.
+ *
+ * Sits directly ABOVE the accessibility launcher in the same corner. The
+ * widget anchors itself at bottom:24 with a matching 56px button, so this
+ * clears it: 24 + 56 + 16 gap = 96px. `left-6` matches the widget's 24px
+ * inset so the two read as one column of identical amber circles.
+ */
 export function WhatsAppFloat() {
   return (
     <a
@@ -72,9 +117,11 @@ export function WhatsAppFloat() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="פתיחת שיחת וואטסאפ עם M.K Studio בחלון חדש"
-      className="fixed bottom-5 left-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-whatsapp text-white shadow-[0_10px_30px_-8px_rgba(37,211,102,0.8)] transition-transform hover:scale-105 sm:bottom-7 sm:left-7"
+      className="btn-amber fixed bottom-24 left-6 z-40 flex h-14 w-14 items-center justify-center rounded-full hover:scale-105"
     >
-      <WhatsAppIcon size={28} />
+      <span className="inline-flex">
+        <WhatsAppIcon size={26} />
+      </span>
     </a>
   )
 }
