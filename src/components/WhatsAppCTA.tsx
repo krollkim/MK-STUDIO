@@ -56,7 +56,7 @@ export default function WhatsAppCTA({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={ariaLabel ?? `${label} — נפתח בוואטסאפ בחלון חדש`}
+      aria-label={ariaLabel ?? `${label}. נפתח בוואטסאפ בחלון חדש`}
       className={`${CTA_BASE} ${SIZES[size]} ${className}`}
     >
       {/* Wrapped in one element so `.btn-amber > *` can lift it above the

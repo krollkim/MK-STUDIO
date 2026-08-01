@@ -114,10 +114,8 @@ export default function StudioSequence() {
                   <p className="eyebrow mb-4">
                     שלב {i + 1} מתוך {SPACE.steps.length}
                   </p>
-                  <h3 className="display text-[clamp(2.25rem,3.4vw,3rem)] text-ink">
-                    {step.title}
-                  </h3>
-                  <p className="mt-4 text-[17px] leading-relaxed text-muted">{step.caption}</p>
+                  <h3 className="h-item text-[clamp(1.5rem,2.4vw,2rem)] text-ink">{step.title}</h3>
+                  <p className="body-lg mt-4 text-muted">{step.caption}</p>
                 </div>
               ))}
             </div>
@@ -162,8 +160,8 @@ export default function StudioSequence() {
             <p className="eyebrow mt-7">
               שלב {i + 1} מתוך {SPACE.steps.length}
             </p>
-            <h3 className="display-sm mt-2 text-3xl text-ink">{step.title}</h3>
-            <p className="mt-3 text-[17px] leading-relaxed text-muted">{step.caption}</p>
+            <h3 className="h-item mt-2 text-2xl text-ink">{step.title}</h3>
+            <p className="body-lg mt-3 text-muted">{step.caption}</p>
           </li>
         ))}
       </ol>

@@ -76,7 +76,7 @@ export default function Contact() {
               <span className="mt-1 shrink-0 text-accent-lit">
                 <WhatsAppIcon size={16} />
               </span>
-              <span>הודעה בוואטסאפ — עונה בדרך כלל תוך כמה שעות</span>
+              <span>הודעה בוואטסאפ. עונה בדרך כלל תוך כמה שעות</span>
             </dd>
           </div>
         </dl>

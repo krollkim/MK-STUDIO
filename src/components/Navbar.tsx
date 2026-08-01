@@ -54,7 +54,7 @@ export default function Navbar({ overDarkHero = false }: NavbarProps) {
             exactly when the bar needs to carry the identity on its own. */}
         <a
           href="#top"
-          aria-label="M.K Studio — חזרה לראש הדף"
+          aria-label="M.K Studio, חזרה לראש הדף"
           className={
             'shrink-0 transition-opacity duration-500 ' +
             (onDark ? 'pointer-events-none opacity-0' : 'opacity-100')

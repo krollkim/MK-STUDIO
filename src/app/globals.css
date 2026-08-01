@@ -93,22 +93,67 @@ body {
 }
 
 /* ============================================================
-   Display type. The serif carries the headlines; Heebo carries the prose.
+   ONE typographic scale. Every section uses these; nothing sets its own
+   heading size inline. The hierarchy is carried by TYPEFACE as much as by
+   size — serif means "section", sans-bold means "item inside a section" —
+   so an item label can never be mistaken for a section heading no matter
+   how long the text is.
+
    Hebrew serifs need a touch more line-height than a Latin serif at the
    same size, and negative tracking keeps the big sizes from drifting apart.
    ============================================================ */
-.display {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  line-height: 1.06;
-  letter-spacing: -0.015em;
-}
 
-.display-sm {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+/* @layer components so a per-instance Tailwind `text-[…]` utility can still
+   override the scale's default size. Unlayered, these rules are emitted after
+   Tailwind and silently win, which pins every heading to one size. */
+@layer components {
+  /* H2. The full stop that announces a new section. */
+  .h-section {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(2.75rem, 7vw, 5.75rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+  }
+
+  /* A heading one rung below H2: sub-blocks that still open a topic. */
+  .h-block {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(2rem, 4.2vw, 3.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+  }
+
+  /* Item label. Sans-bold, so it reads as subordinate to any serif heading
+     regardless of the size an individual section gives it. */
+  .h-item {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1.9vw, 1.5rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  /* Section lead: the sentence directly under an H2. */
+  .lead {
+    font-size: clamp(1.1875rem, 1.7vw, 1.4375rem);
+    line-height: 1.65;
+  }
+
+  /* Body copy in the text-heavy sections. Generous on purpose. */
+  .body-lg {
+    font-size: clamp(1.125rem, 1.35vw, 1.1875rem);
+    line-height: 1.78;
+  }
+
+  /* Kept for the hero and the pull-quote, which are their own thing. */
+  .display {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.015em;
+  }
 }
 
 /* Small all-caps label above a heading. Uses the deeper accent because it can

@@ -3,7 +3,6 @@ import ScrollReveal from './ScrollReveal'
 interface SectionHeadingProps {
   eyebrow: string
   title: string
-  /** Words inside `title` to set in accent — the "keyword serif" treatment. */
   lead?: string
   align?: 'start' | 'center'
   tone?: 'light' | 'dark'
@@ -11,10 +10,14 @@ interface SectionHeadingProps {
 }
 
 /**
- * Shared section header: eyebrow + <h2> + optional lead paragraph.
+ * Shared section header: eyebrow + <h2> + optional lead.
+ *
+ * Sizes come from the `.h-section` / `.lead` scale in globals.css — nothing
+ * here sets a font size, which is what keeps every section announcing itself
+ * at exactly the same weight.
  *
  * It owns its own ScrollReveal so the heading and the content below animate as
- * two separate elements — never wrap a StaggerReveal grid in another
+ * two separate elements; never wrap a StaggerReveal grid in another
  * ScrollReveal, the two opacity tweens fight each other.
  */
 export default function SectionHeading({
@@ -30,23 +33,12 @@ export default function SectionHeading({
 
   return (
     <ScrollReveal
-      className={`${centered ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'} ${className}`}
+      className={`${centered ? 'mx-auto max-w-4xl text-center' : 'max-w-4xl'} ${className}`}
     >
-      <p className={`eyebrow mb-5 ${dark ? 'text-accent-lit' : ''}`}>{eyebrow}</p>
-      <h2
-        className={
-          'display text-[clamp(2.5rem,6vw,4.5rem)] ' + (dark ? 'text-white' : 'text-ink')
-        }
-      >
-        {title}
-      </h2>
+      <p className={`eyebrow mb-7 ${dark ? 'text-accent-lit' : ''}`}>{eyebrow}</p>
+      <h2 className={`h-section ${dark ? 'text-white' : 'text-ink'}`}>{title}</h2>
       {lead && (
-        <p
-          className={
-            'mt-7 text-[clamp(1.0625rem,1.6vw,1.3125rem)] leading-relaxed ' +
-            (dark ? 'text-white/70' : 'text-muted')
-          }
-        >
+        <p className={`lead mt-8 max-w-2xl ${centered ? 'mx-auto' : ''} ${dark ? 'text-white/70' : 'text-muted'}`}>
           {lead}
         </p>
       )}

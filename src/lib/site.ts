@@ -15,7 +15,7 @@ export const SITE_URL = 'https://mkstudio.co.il' // TODO: real domain (used for 
 
 export const STUDIO = {
   name: 'M.K Studio',
-  legalName: 'M.K Studio — אולפן הקלטות והפקה מוזיקלית',
+  legalName: 'M.K Studio, אולפן הקלטות והפקה מוזיקלית',
   owner: 'מתן',
   neighborhood: 'פלורנטין',
   city: 'תל אביב',
@@ -28,7 +28,7 @@ export const FUNNEL = 'דף נחיתה M.K Studio'
 /** The single prefilled message behind the primary CTA. */
 export const WHATSAPP_MESSAGE = [
   `היי מתן, הגעתי מ${STUDIO.name} באינטרנט.`,
-  'אשמח לקבוע סשן היכרות חינם — יש לי משהו שכתבתי ואני רוצה להפוך אותו לשיר.',
+  'אשמח לקבוע סשן היכרות חינם. יש לי משהו שכתבתי ואני רוצה להפוך אותו לשיר.',
 ].join('\n')
 
 /** Build a wa.me deep link with an optional prefilled (URL-encoded) message. */
