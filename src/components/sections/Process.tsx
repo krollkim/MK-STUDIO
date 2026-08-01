@@ -62,7 +62,7 @@ export default function Process() {
   return (
     <section
       id="process"
-      className="silver-up relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
+      className="silver-deep seam-top relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
     >
       <AmbientWord position="start" className="bottom-6">
         מכאן
@@ -83,7 +83,7 @@ export default function Process() {
               <div className="mb-7 flex items-center gap-4">
                 <span
                   aria-hidden="true"
-                  className="amber-fill relative z-1 block h-2.5 w-2.5 shrink-0 rounded-full ring-4 ring-(--color-silver-0) transition-transform duration-300 group-hover:scale-125"
+                  className="amber-fill relative z-1 block h-2.5 w-2.5 shrink-0 rounded-full ring-4 ring-silver-2 transition-transform duration-300 group-hover:scale-125"
                 />
                 {i < PROCESS.steps.length - 1 && (
                   <span aria-hidden="true" className="relative h-px flex-1 bg-line">

@@ -14,7 +14,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="silver-up relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
+      className="silver-deep seam-top relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
     >
       {/* Anchored to the gutter beside the services list, below the heading
           block — at the top it sat directly behind the H2 and disappeared. */}

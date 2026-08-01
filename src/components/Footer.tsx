@@ -7,7 +7,7 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="silver-down px-5 py-16 sm:px-8">
+    <footer className="silver-light px-5 py-16 sm:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-9 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-3">
           <Logo size={40} />

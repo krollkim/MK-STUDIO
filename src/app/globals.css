@@ -11,12 +11,19 @@
      · accent  — ONE burnt amber. CTA + small marks only.
    ============================================================ */
 @theme {
-  /* Brushed-silver field. Sections ombré between these two stops, so the
-     silver reads as a lit metal surface instead of a flat grey fill. */
-  --color-silver-0: #f3f2ef;
-  --color-silver-1: #dad8d2;
+  /* Brushed silver. Each light section ramps from its own top stop to its own
+     bottom stop and RESETS at the next section — a single ramp spanning the
+     whole page changes so slowly that inside one viewport it reads as a flat
+     grey fill, which is exactly what this replaces.
 
-  --color-bg: #f3f2ef;
+     Two bands, alternating: 0→1 for a light section, 2→3 for the next one
+     down. The whole spread is ~18 values, so it is felt rather than seen. */
+  --color-silver-0: #f4f3f0; /* light section, top */
+  --color-silver-1: #e9e7e1; /* light section, bottom */
+  --color-silver-2: #eeece7; /* deep section, top */
+  --color-silver-3: #e2e0d9; /* deep section, bottom */
+
+  --color-bg: #f4f3f0;
   /* Raised panels sit LIGHTER than the field, not darker. */
   --color-surface: #fbfaf8;
   --color-surface-2: #e4e2dc;
@@ -169,25 +176,67 @@ body {
 /* ============================================================
    Brushed-silver sections.
 
-   Each light section ombrés between the two silver stops, and consecutive
-   sections ALTERNATE direction (down → up → down …) so the dark end of one
-   meets the dark end of the next. That removes the banding you would get from
-   repeating the same top-light/bottom-dark ramp, and the whole page reads as
-   one continuous sheet of metal rather than a stack of panels.
+   Every light section carries its OWN ombré: a touch brighter at the top,
+   settling slightly deeper at the bottom, then resetting at the next section.
+   That reset is what makes the metal read in the middle of the page, and it
+   doubles as the boundary between sections without needing a rule.
 
-   A soft white radial bloom sits at the light end — the Apple-style "lit from
-   above" cue that stops the gradient from looking like flat grey.
+   Consecutive sections alternate band (light / deep). The offset is tiny on
+   purpose: enough to feel a change of room, not enough to see a stripe.
+
+   Two lighting cues, both resetting per section:
+     · a soft bloom at the top edge — "lit from above"
+     · a low diagonal sheen — the brushed-metal sweep
+   Neither is strong enough to be noticed as an effect on its own.
    ============================================================ */
-.silver-down {
+.silver-light {
   background-image:
-    radial-gradient(115% 65% at 50% 0%, rgb(255 255 255 / 0.75), transparent 62%),
+    linear-gradient(112deg, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0) 46%),
+    radial-gradient(120% 46% at 50% 0%, rgb(255 255 255 / 0.6), transparent 70%),
     linear-gradient(180deg, var(--color-silver-0) 0%, var(--color-silver-1) 100%);
 }
 
-.silver-up {
+.silver-deep {
   background-image:
-    radial-gradient(115% 65% at 50% 100%, rgb(255 255 255 / 0.75), transparent 62%),
-    linear-gradient(180deg, var(--color-silver-1) 0%, var(--color-silver-0) 100%);
+    linear-gradient(112deg, rgb(255 255 255 / 0.42) 0%, rgb(255 255 255 / 0) 46%),
+    radial-gradient(120% 46% at 50% 0%, rgb(255 255 255 / 0.5), transparent 70%),
+    linear-gradient(180deg, var(--color-silver-2) 0%, var(--color-silver-3) 100%);
+}
+
+/* Hairline seam. NOT for every boundary — the per-section reset already
+   separates most of them. This is only for the joins where a section's bottom
+   and the next one's top land within a few values of each other and the edge
+   would otherwise go unnoticed. The amber dot is a signature, not decoration:
+   one tiny mark, low opacity, dead centre. */
+.seam-top {
+  position: relative;
+}
+
+.seam-top::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(26 25 23 / 0.07) 18%,
+    rgb(26 25 23 / 0.07) 82%,
+    transparent
+  );
+}
+
+.seam-top::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline-start: calc(50% - 2px);
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-amber-mid);
+  opacity: 0.45;
 }
 
 /* ============================================================

@@ -79,7 +79,7 @@ export default function StudioSequence() {
   }, [])
 
   return (
-    <section id="space" className="silver-down">
+    <section id="space" className="silver-light">
       <div className="mx-auto max-w-6xl px-5 pt-28 sm:px-8 lg:pt-40">
         <SectionHeading eyebrow={SPACE.eyebrow} title={SPACE.title} lead={SPACE.lead} />
       </div>

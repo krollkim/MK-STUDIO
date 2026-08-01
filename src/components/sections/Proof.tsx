@@ -64,7 +64,7 @@ export default function Proof() {
   return (
     // The silver ombré lives on the wrapper so the section keeps its place in
     // the alternating down/up chain; the component itself stays transparent.
-    <div id="proof" className="silver-down">
+    <div id="proof" className="silver-light">
       <SocialProofSection
         eyebrow={PROOF.eyebrow}
         heading={PROOF.title}

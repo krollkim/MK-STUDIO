@@ -43,7 +43,9 @@ export default function Audience() {
   return (
     <section
       id="audience"
-      className="silver-down relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
+      /* Light band. Follows the dark hero, so that boundary is already
+         emphatic and needs no seam. */
+      className="silver-light relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
     >
       {/* The staggered layout leaves the left side open beside entry 01, which
           is the only genuinely empty area in this section. */}

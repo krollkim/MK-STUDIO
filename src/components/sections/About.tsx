@@ -14,7 +14,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="silver-up relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
+      className="silver-deep seam-top relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
     >
       {/* Sits low, in the gap beside the closing aside — the old top-32
           placement put it directly under the heading and the video, which

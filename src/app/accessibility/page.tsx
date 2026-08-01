@@ -50,7 +50,7 @@ export default function AccessibilityPage() {
   return (
     <>
       <Navbar />
-      <main id="main" className="silver-down px-5 pt-32 pb-24 sm:px-8 lg:pt-44">
+      <main id="main" className="silver-light px-5 pt-32 pb-24 sm:px-8 lg:pt-44">
         <article className="mx-auto max-w-3xl">
           <p className="eyebrow mb-5">נגישות</p>
           <h1 className="display text-[clamp(2.5rem,6vw,4rem)] text-ink">הצהרת נגישות</h1>
