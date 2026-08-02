@@ -24,8 +24,6 @@ tsconfig.tsbuildinfo
 /.swc
 
 # env — never commit real keys
-.env
-.env.local
 .env.development.local
 .env.test.local
 .env.production.local
@@ -56,3 +54,4 @@ Thumbs.db
 # repo stays small. Keep the folder locally; back it up outside git.
 # ------------------------------------------------------------------
 /מתן - תכנים/
+config.bat

@@ -1,15 +1,37 @@
 /**
  * Single place for everything that is "the business", not "the design".
  *
- * ⚠️ BEFORE GOING LIVE — replace the three placeholders marked TODO below with
+ * ⚠️ BEFORE GOING LIVE — replace every placeholder marked TODO below with
  *    Matan's real details. Nothing else in the codebase hardcodes them.
  */
 
+/* ---------------------------------------------------------------------------
+   The one conversion channel.
+
+   WhatsApp is the ONLY way to reach the studio from the landing page itself.
+   A phone button next to the CTA splits attention and asks the visitor to make
+   a decision they did not come here to make, and nothing is actually lost:
+   WhatsApp is a phone number underneath. The audience (creators, 20+) lives
+   there already.
+   --------------------------------------------------------------------------- */
+
 /** WhatsApp requires international digits only: country code, no leading 0, no '+'. */
-export const WHATSAPP_PHONE = '972500000000' // TODO: real number, e.g. 972521234567
-/** Human-readable phone for the tel: link and the contact card. */
-export const PHONE_DISPLAY = '050-000-0000' // TODO: real number
-export const PHONE_TEL = '+972500000000' // TODO: real number
+export const WHATSAPP_PHONE = '972528777017'
+
+/* ---------------------------------------------------------------------------
+   Formal contact details.
+
+   These are NOT for the landing page. They exist because the accessibility
+   statement legally has to name a way to report a problem, and the terms /
+   privacy pages need a contact. Do not reintroduce them next to a CTA.
+   --------------------------------------------------------------------------- */
+
+/** Human-readable phone, legal pages only. */
+export const PHONE_DISPLAY = '052-877-7017'
+/** `tel:` form of the same number, legal pages only. */
+export const PHONE_TEL = '+972528777017'
+/** Contact email, legal pages only. */
+export const EMAIL = 'matan73737@gmail.com'
 
 export const SITE_URL = 'https://mkstudio.co.il' // TODO: real domain (used for canonical + JSON-LD)
 

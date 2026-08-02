@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import Logo from './Logo'
 import WhatsAppCTA from './WhatsAppCTA'
 import { NAV_LINKS } from '@/lib/content'
@@ -17,6 +18,20 @@ interface NavbarProps {
 export default function Navbar({ overDarkHero = false }: NavbarProps) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
+
+  /**
+   * The nav anchors are on-page fragments (`#services`). On any route other
+   * than the home page a bare fragment resolves against the CURRENT path, so
+   * `/privacy#services` just sits there doing nothing and the visitor is
+   * stranded with no way back. Off the home page every link becomes absolute.
+   *
+   * Derived from the pathname rather than a prop so a new route added later
+   * cannot forget to pass it.
+   */
+  const onHome = pathname === '/'
+  const sectionHref = (hash: string) => (onHome ? hash : `/${hash}`)
+  const homeHref = onHome ? '#top' : '/'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -53,8 +68,8 @@ export default function Navbar({ overDarkHero = false }: NavbarProps) {
             read as a mistake. It fades in as the hero scrolls away, which is
             exactly when the bar needs to carry the identity on its own. */}
         <a
-          href="#top"
-          aria-label="M.K Studio, חזרה לראש הדף"
+          href={homeHref}
+          aria-label={onHome ? 'M.K Studio, חזרה לראש הדף' : 'M.K Studio, חזרה לדף הבית'}
           className={
             'shrink-0 transition-opacity duration-500 ' +
             (onDark ? 'pointer-events-none opacity-0' : 'opacity-100')
@@ -74,7 +89,7 @@ export default function Navbar({ overDarkHero = false }: NavbarProps) {
           {NAV_LINKS.map((l) => (
             <a
               key={l.href}
-              href={l.href}
+              href={sectionHref(l.href)}
               className={
                 'text-[15px] font-medium transition-colors ' +
                 (onDark ? 'text-white/85 hover:text-white' : 'text-muted hover:text-ink')
@@ -125,7 +140,7 @@ export default function Navbar({ overDarkHero = false }: NavbarProps) {
             {NAV_LINKS.map((l) => (
               <li key={l.href}>
                 <a
-                  href={l.href}
+                  href={sectionHref(l.href)}
                   onClick={() => setOpen(false)}
                   className="block rounded-2xl px-3 py-3 display-sm text-2xl text-ink transition-colors hover:bg-surface"
                 >

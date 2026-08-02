@@ -62,7 +62,7 @@ export default function Process() {
   return (
     <section
       id="process"
-      className="silver-deep seam-top relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
+      className="silver-deep relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
     >
       <AmbientWord position="start" className="bottom-6">
         מכאן

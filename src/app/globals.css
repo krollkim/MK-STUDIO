@@ -203,40 +203,148 @@ body {
     linear-gradient(180deg, var(--color-silver-2) 0%, var(--color-silver-3) 100%);
 }
 
-/* Hairline seam. NOT for every boundary — the per-section reset already
-   separates most of them. This is only for the joins where a section's bottom
-   and the next one's top land within a few values of each other and the edge
-   would otherwise go unnoticed. The amber dot is a signature, not decoration:
-   one tiny mark, low opacity, dead centre. */
-.seam-top {
-  position: relative;
-}
+/* Section seams were removed. The per-section ombré reset does the separating
+   on its own: measured, the hairline contributed Δ3–5 against a Δ13 tonal step,
+   and an A/B of the same boundary with and without it was indistinguishable.
+   The one seam that remains is the footer's, below — that one crosses a
+   dark-to-light edge and earns its place. */
 
-.seam-top::before {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgb(26 25 23 / 0.07) 18%,
-    rgb(26 25 23 / 0.07) 82%,
-    transparent
-  );
-}
+/* ============================================================
+   Footer: a silver plate with the wordmark pressed into it.
 
-.seam-top::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  inset-inline-start: calc(50% - 2px);
-  width: 4px;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--color-amber-mid);
-  opacity: 0.45;
+   Kept as real CSS rather than utilities. The deboss, the brushed grooves and
+   the sheen are multi-stop shadows and repeating gradients that do not map to
+   Tailwind cleanly, and forcing them into arbitrary-value classes would make
+   them unreadable and easy to break.
+
+   In @layer components deliberately: unlayered, these are emitted after
+   Tailwind and beat every utility, which is exactly how the type scale broke
+   in an earlier round.
+   ============================================================ */
+@layer components {
+  /* The one seam left on the site. It crosses the dark CTA into the light
+     plate, and carries the single amber dot. */
+  .seam {
+    position: relative;
+    height: 1px;
+    background: rgb(26 25 23 / 0.1);
+    z-index: 3;
+  }
+
+  .seam::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    inset-inline-end: 50%;
+    transform: translate(50%, -50%);
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #f4a63a, #7c2e12);
+    box-shadow:
+      0 0 18px rgb(244 166 58 / 0.75),
+      0 0 4px rgb(244 166 58 / 0.9);
+  }
+
+  .site-footer {
+    position: relative;
+    /* Required: the wordmark deliberately overflows both edges. */
+    overflow: hidden;
+    padding-top: 88px;
+    /* The ramp is what softens the jump from the dark section above.
+       Do not flatten it to a single colour. */
+    background: linear-gradient(
+      180deg,
+      #d6d4cd 0%,
+      #eae8e3 16%,
+      #f3f2ef 44%,
+      #f3f2ef 100%
+    );
+  }
+
+  /* Brushed-metal grooves. */
+  .site-footer__brush {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      90deg,
+      rgb(26 25 23 / 0.018) 0 1px,
+      rgb(255 255 255 / 0.42) 1px 2px,
+      transparent 2px 6px
+    );
+  }
+
+  /* Light pooling on the plate, behind the wordmark. */
+  .site-footer__sheen {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+    height: 340px;
+    pointer-events: none;
+    background: radial-gradient(
+      60% 70% at 50% 40%,
+      rgb(255 255 255 / 0.85) 0%,
+      rgb(255 255 255 / 0) 72%
+    );
+  }
+
+  /* The wordmark, pressed INTO the plate.
+     The fill is all but identical to the background — every bit of the depth
+     comes from the four shadows, and their ORDER is what makes it read as
+     debossed rather than raised: dark at the top edge (light falls past a
+     recess), white at the bottom edge. Reversing them embosses it. */
+  .site-footer__mark {
+    /* Required. Without it the Latin glyphs reverse under dir="rtl" and this
+       renders as "OIDUTS K.M". */
+    direction: ltr;
+    unicode-bidi: isolate;
+    position: relative;
+    margin-top: 64px;
+    margin-inline: clamp(-200px, -14vw, -40px);
+    text-align: center;
+    white-space: nowrap;
+    user-select: none;
+    font-family: "Frank Ruhl Libre", serif;
+    font-weight: 400;
+    font-size: clamp(96px, 21vw, 300px);
+    line-height: 0.88;
+    letter-spacing: -0.02em;
+    color: #efede8;
+    text-shadow:
+      0 -2px 1px rgb(26 25 23 / 0.26),
+      0 -5px 8px rgb(26 25 23 / 0.1),
+      0 3px 0 rgb(255 255 255 / 0.95),
+      0 6px 10px rgb(255 255 255 / 0.7);
+  }
+
+  /* Phones only: the whole word has to be readable.
+     Measured, the glyph run is 5.37 x the font-size. Above ~457px the clamp
+     tracks the viewport and the bleed stays at a constant ~6% per side, which
+     is the intended look. Below that the 96px floor stops scaling, the bleed
+     balloons to 24% per side, and "M.K STUDIO" renders as ".K STUDI" — a
+     ghost word nobody can read is just noise.
+     18vw x 5.37 = 96.7% of the viewport, so it fits with a hair to spare. */
+  @media (max-width: 480px) {
+    .site-footer__mark {
+      font-size: 18vw;
+      margin-inline: 0;
+    }
+  }
+
+  .site-footer__monogram {
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    border: 1px solid rgb(26 25 23 / 0.3);
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: #1a1917;
+  }
 }
 
 /* ============================================================

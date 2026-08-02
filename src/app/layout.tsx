@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Heebo, Frank_Ruhl_Libre } from 'next/font/google'
 import GSAPInit from '@/components/GSAPInit'
 import AccessibilityWidget from '@/components/AccessibilityWidget'
-import { PHONE_DISPLAY, SITE_URL, STUDIO } from '@/lib/site'
+import { SITE_URL, STUDIO } from '@/lib/site'
 import './globals.css'
 
 /**
@@ -96,11 +96,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         {/* Bottom-left corner (RTL). Its launcher takes the lowest slot and the
             WhatsApp float sits directly above it — see WhatsAppFloat. */}
+        {/* No coordinatorPhone: the panel opens on the landing page, and the
+            page offers exactly one channel. It links to /accessibility instead,
+            where the phone, the email and the WhatsApp line all live. */}
         <AccessibilityWidget
           side="left"
           statementUrl="/accessibility"
           coordinatorName={`רכז נגישות: ${STUDIO.owner}`}
-          coordinatorPhone={PHONE_DISPLAY}
           theme={A11Y_THEME}
         />
       </body>

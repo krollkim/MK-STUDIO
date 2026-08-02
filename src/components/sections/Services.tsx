@@ -14,7 +14,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="silver-deep seam-top relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
+      className="silver-deep relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
     >
       {/* Anchored to the gutter beside the services list, below the heading
           block — at the top it sat directly behind the H2 and disappeared. */}
@@ -54,7 +54,11 @@ export default function Services() {
 
         {/* The outcome — what the visitor actually walks away with. */}
         <ScrollReveal className="mt-24 lg:mt-32">
-          <div className="relative grid items-center gap-12 rounded-hero bg-night px-7 py-14 sm:px-12 lg:grid-cols-[1fr_20rem] lg:gap-16 lg:px-16 lg:py-20">
+          {/* 24rem, not 20rem: the text column was 640px wide while its own
+              content is capped at max-w-xl (576px), so the extra 64px was dead
+              space. Giving it to the poster makes its lettering legible without
+              reflowing a single line of copy. */}
+          <div className="relative grid items-center gap-12 rounded-hero bg-night px-7 py-14 sm:px-12 lg:grid-cols-[1fr_24rem] lg:gap-16 lg:px-16 lg:py-20">
             <div>
               <p className="eyebrow mb-6 text-accent-lit">{SERVICES.outcome.eyebrow}</p>
               <h3 className="h-block text-white">{SERVICES.outcome.title}</h3>
@@ -92,7 +96,7 @@ export default function Services() {
                 src="/images/studio-brandmark.webp"
                 alt="גרפיקת המותג של M.K Studio: עמדת ההקלטה עם מיקרופון, מוניטורים, פסנתר וגיטרות"
                 fill
-                sizes="(max-width: 1024px) 100vw, 20rem"
+                sizes="(max-width: 1024px) 100vw, 24rem"
                 className="object-cover"
               />
             </div>

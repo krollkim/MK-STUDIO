@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { PHONE_DISPLAY, PHONE_TEL, STUDIO, WHATSAPP_URL } from '@/lib/site'
+import { EMAIL, PHONE_DISPLAY, PHONE_TEL, STUDIO, WHATSAPP_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: `הצהרת נגישות | ${STUDIO.name}`,
@@ -106,6 +106,15 @@ export default function AccessibilityPage() {
                   className="inline-block font-semibold text-ink underline underline-offset-4 transition-colors hover:text-accent"
                 >
                   {PHONE_DISPLAY}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`mailto:${EMAIL}`}
+                  dir="ltr"
+                  className="inline-block font-semibold text-ink underline underline-offset-4 transition-colors hover:text-accent"
+                >
+                  {EMAIL}
                 </a>
               </li>
             </ul>
