@@ -4,34 +4,24 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Logo from './Logo'
 import WhatsAppCTA from './WhatsAppCTA'
-import { NAV_LINKS } from '@/lib/content'
+import LanguageSwitcher from './LanguageSwitcher'
+import { localePath, stripLocale, type Dictionary, type Locale } from '@/lib/i18n'
 
 interface NavbarProps {
+  locale: Locale
+  dict: Dictionary
   /**
    * True when the page opens with the dark cinematic hero: the bar starts
-   * transparent with light marks and flips to the greige bar once scrolled.
-   * Light pages (e.g. /accessibility) leave this off and stay dark-on-light.
+   * transparent with light marks and flips to the silver bar once scrolled.
+   * Light pages (the legal routes) leave this off.
    */
   overDarkHero?: boolean
 }
 
-export default function Navbar({ overDarkHero = false }: NavbarProps) {
+export default function Navbar({ locale, dict, overDarkHero = false }: NavbarProps) {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
-
-  /**
-   * The nav anchors are on-page fragments (`#services`). On any route other
-   * than the home page a bare fragment resolves against the CURRENT path, so
-   * `/privacy#services` just sits there doing nothing and the visitor is
-   * stranded with no way back. Off the home page every link becomes absolute.
-   *
-   * Derived from the pathname rather than a prop so a new route added later
-   * cannot forget to pass it.
-   */
-  const onHome = pathname === '/'
-  const sectionHref = (hash: string) => (onHome ? hash : `/${hash}`)
-  const homeHref = onHome ? '#top' : '/'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -50,6 +40,16 @@ export default function Navbar({ overDarkHero = false }: NavbarProps) {
 
   const onDark = overDarkHero && !scrolled && !open
 
+  /**
+   * The nav anchors are on-page fragments. On any route other than the home
+   * page a bare fragment resolves against the CURRENT path, so `/terms#services`
+   * just sits there and the visitor is stranded. Off the home page every link
+   * becomes an absolute, locale-correct URL.
+   */
+  const onHome = stripLocale(pathname) === '/'
+  const sectionHref = (hash: string) => (onHome ? hash : `${localePath(locale)}${hash}`)
+  const homeHref = onHome ? '#top' : localePath(locale)
+
   return (
     <header
       className={
@@ -57,19 +57,15 @@ export default function Navbar({ overDarkHero = false }: NavbarProps) {
         (scrolled || open
           ? 'border-b border-line bg-bg/85 backdrop-blur-xl'
           : 'border-b border-transparent') +
-        // Over the photo hero the bar needs its own scrim — the top of the
-        // frame is pale wood and white links wash out against it.
         (onDark ? ' bg-gradient-to-b from-night/65 via-night/25 to-transparent' : '')
       }
     >
       <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
-        {/* Over the hero the logo is hidden: the hero itself shows the wordmark
-            large, directly below, and two logos stacked on top of each other
-            read as a mistake. It fades in as the hero scrolls away, which is
-            exactly when the bar needs to carry the identity on its own. */}
+        {/* Over the hero the logo is hidden: the hero shows the wordmark large
+            directly below, and two logos stacked read as a mistake. */}
         <a
           href={homeHref}
-          aria-label={onHome ? 'M.K Studio, חזרה לראש הדף' : 'M.K Studio, חזרה לדף הבית'}
+          aria-label={onHome ? dict.common.backToTop : dict.common.backHome}
           className={
             'shrink-0 transition-opacity duration-500 ' +
             (onDark ? 'pointer-events-none opacity-0' : 'opacity-100')
@@ -78,15 +74,15 @@ export default function Navbar({ overDarkHero = false }: NavbarProps) {
           aria-hidden={onDark ? 'true' : undefined}
         >
           <span className="sm:hidden">
-            <Logo size={36} markOnly />
+            <Logo size={36} markOnly location={dict.common.locationShort} />
           </span>
           <span className="hidden sm:block">
-            <Logo size={36} />
+            <Logo size={36} location={dict.common.locationShort} />
           </span>
         </a>
 
-        <nav aria-label="ניווט ראשי" className="hidden flex-1 justify-center gap-8 lg:flex">
-          {NAV_LINKS.map((l) => (
+        <nav aria-label={dict.common.mainNav} className="hidden flex-1 justify-center gap-8 lg:flex">
+          {dict.nav.links.map((l) => (
             <a
               key={l.href}
               href={sectionHref(l.href)}
@@ -100,49 +96,52 @@ export default function Navbar({ overDarkHero = false }: NavbarProps) {
           ))}
         </nav>
 
-        <div className="hidden shrink-0 lg:block">
-          <WhatsAppCTA label="סשן היכרות חינם" size="sm" />
-        </div>
+        <div className="flex shrink-0 items-center gap-1">
+          <LanguageSwitcher label={dict.common.langSwitcherLabel} onDark={onDark} />
+          <div className="hidden lg:block">
+            <WhatsAppCTA cta={dict.cta} label={dict.nav.ctaShort} size="sm" />
+          </div>
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          aria-label={open ? 'סגירת התפריט' : 'פתיחת התפריט'}
-          className={
-            'flex h-11 w-11 items-center justify-center rounded-full border transition-colors lg:hidden ' +
-            (onDark ? 'border-white/30 text-white' : 'border-line text-ink')
-          }
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            aria-hidden="true"
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? dict.common.closeMenu : dict.common.openMenu}
+            className={
+              'flex h-11 w-11 items-center justify-center rounded-full border transition-colors lg:hidden ' +
+              (onDark ? 'border-white/30 text-white' : 'border-line text-ink')
+            }
           >
-            {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M3 6h18M3 12h18M3 18h18" />}
-          </svg>
-        </button>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M3 6h18M3 12h18M3 18h18" />}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {open && (
         <nav
           id="mobile-menu"
-          aria-label="ניווט ראשי (נייד)"
+          aria-label={dict.common.mobileNav}
           className="border-t border-line bg-bg px-5 py-6 lg:hidden"
         >
           <ul className="flex flex-col gap-1">
-            {NAV_LINKS.map((l) => (
+            {dict.nav.links.map((l) => (
               <li key={l.href}>
                 <a
                   href={sectionHref(l.href)}
                   onClick={() => setOpen(false)}
-                  className="block rounded-2xl px-3 py-3 display-sm text-2xl text-ink transition-colors hover:bg-surface"
+                  className="display-sm block rounded-2xl px-3 py-3 text-2xl text-ink transition-colors hover:bg-surface"
                 >
                   {l.label}
                 </a>
@@ -150,8 +149,7 @@ export default function Navbar({ overDarkHero = false }: NavbarProps) {
             ))}
           </ul>
           <div className="mt-6">
-            {/* Same amber CTA as everywhere else — no second colour on mobile. */}
-            <WhatsAppCTA className="w-full" />
+            <WhatsAppCTA cta={dict.cta} className="w-full" />
           </div>
         </nav>
       )}

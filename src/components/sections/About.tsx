@@ -2,42 +2,44 @@ import Image from 'next/image'
 import ScrollReveal from '@/components/ScrollReveal'
 import StudioVideo from '@/components/StudioVideo'
 import AmbientWord from '@/components/AmbientWord'
-import { ABOUT } from '@/lib/content'
+import type { Dictionary } from '@/lib/i18n'
 
 /**
- * Section 5 — "למה מתן". His own story. The pull-quote leads (it is the most
+ * Section 5 — "why Matan". His own story. The pull-quote leads (it is the most
  * human line on the page), the video and a scattered pair of floating frames
  * carry the visual weight, and the price objection is answered quietly at the
  * end rather than in a box shouting about value.
  */
-export default function About() {
+export default function About({ dict }: { dict: Dictionary }) {
+  const { about } = dict
+
   return (
     <section
       id="about"
       className="silver-deep relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
     >
-      {/* Sits low, in the gap beside the closing aside — the old top-32
-          placement put it directly under the heading and the video, which
-          swallowed it completely. */}
+      {/* Sits low, in the gap beside the closing aside; a top placement put it
+          under the heading and the video, which swallowed it. */}
       <AmbientWord position="end" className="bottom-16">
-        שיר
+        {about.ambient}
       </AmbientWord>
 
       <div className="relative mx-auto max-w-6xl">
         <ScrollReveal className="max-w-4xl">
-          <p className="eyebrow mb-7">{ABOUT.eyebrow}</p>
-          <h2 className="h-section text-ink">{ABOUT.title}</h2>
+          <p className="eyebrow mb-7">{about.eyebrow}</p>
+          <h2 className="h-section text-ink">{about.title}</h2>
         </ScrollReveal>
 
-        {/* Video leads, wide and floating — no frame, just elevation. */}
+        {/* Video leads, wide and floating: no frame, just elevation. */}
         <ScrollReveal className="mt-16 lg:mt-20">
           <StudioVideo
-            src={ABOUT.video.src}
-            poster={ABOUT.video.poster}
-            label={ABOUT.video.label}
+            src={about.video.src}
+            poster={about.video.poster}
+            label={about.video.label}
+            playLabel={about.playLabel}
             className="aspect-video w-full shadow-float-lg"
           />
-          <p className="mt-4 text-sm text-muted">{ABOUT.video.label}</p>
+          <p className="mt-4 text-sm text-muted">{about.video.label}</p>
         </ScrollReveal>
 
         <div className="mt-20 grid gap-16 lg:mt-28 lg:grid-cols-[1fr_0.8fr] lg:gap-20">
@@ -46,22 +48,23 @@ export default function About() {
               <span aria-hidden="true" className="amber-text">
                 „
               </span>
-              {ABOUT.quote}
+              {about.quote}
               <span aria-hidden="true" className="amber-text">
                 ”
               </span>
             </blockquote>
 
             <div className="body-lg mt-12 space-y-6 text-muted">
-              {ABOUT.body.map((p) => (
+              {about.body.map((p) => (
                 <p key={p.slice(0, 24)}>{p}</p>
               ))}
             </div>
 
-            {/* The price objection: a quiet aside, marked by a rule, not a card. */}
-            <div className="mt-14 border-r-2 border-accent/50 pr-7">
-              <h3 className="h-item text-ink">{ABOUT.valueNote.title}</h3>
-              <p className="body-lg mt-3 text-muted">{ABOUT.valueNote.body}</p>
+            {/* The price objection: a quiet aside, marked by a rule, not a card.
+                Logical border so it sits on the reading edge in both languages. */}
+            <div className="mt-14 border-s-2 border-accent/50 ps-7">
+              <h3 className="h-item text-ink">{about.valueNote.title}</h3>
+              <p className="body-lg mt-3 text-muted">{about.valueNote.body}</p>
             </div>
           </ScrollReveal>
 
@@ -70,18 +73,18 @@ export default function About() {
             <div className="relative aspect-3/4 overflow-hidden rounded-card shadow-float lg:-rotate-2">
               <Image
                 src="/images/guitar-session.webp"
-                alt="מתן מקליט גיטרה עם יוצר באולפן, מול עמדת השליטה"
+                alt={about.guitarAlt}
                 fill
                 sizes="(max-width: 1024px) 100vw, 32rem"
                 className="object-cover"
               />
             </div>
 
-            <div className="relative -mt-16 mr-auto ml-0 w-[62%] overflow-hidden rounded-card shadow-float-lg lg:rotate-3">
+            <div className="relative -mt-16 me-auto ms-0 w-[62%] overflow-hidden rounded-card shadow-float-lg lg:rotate-3">
               <div className="relative aspect-4/5">
                 <Image
                   src="/images/recording-session.webp"
-                  alt="הקלטה באולפן M.K Studio"
+                  alt={about.sessionAlt}
                   fill
                   sizes="(max-width: 1024px) 62vw, 20rem"
                   className="object-cover"

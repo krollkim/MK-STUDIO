@@ -4,10 +4,10 @@ import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
 import SectionHeading from '@/components/SectionHeading'
-import { SPACE } from '@/lib/content'
+import { fill, type Dictionary } from '@/lib/i18n'
 
 /**
- * Section 4 — "החלל קם לחיים".
+ * Section 4 — the room coming to life.
  *
  * Desktop: the visual is pinned and the three build stages cross-fade as you
  * scroll (ScrollTrigger pin + scrub), with the caption swapping in step.
@@ -16,8 +16,11 @@ import { SPACE } from '@/lib/content'
  * plain stacked list. Pinning on a phone fights the address-bar resize and the
  * story reads fine as a static sequence, so we simply don't build the timeline.
  */
-export default function StudioSequence() {
+export default function StudioSequence({ dict }: { dict: Dictionary }) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const { space } = dict
+  const stage = (i: number) =>
+    fill(space.stageLabel, { n: i + 1, total: space.steps.length })
 
   useEffect(() => {
     const root = rootRef.current
@@ -81,7 +84,7 @@ export default function StudioSequence() {
   return (
     <section id="space" className="silver-light">
       <div className="mx-auto max-w-6xl px-5 pt-28 sm:px-8 lg:pt-40">
-        <SectionHeading eyebrow={SPACE.eyebrow} title={SPACE.title} lead={SPACE.lead} />
+        <SectionHeading eyebrow={space.eyebrow} title={space.title} lead={space.lead} />
       </div>
 
       {/* ---------- Desktop: pinned cross-fade sequence ---------- */}
@@ -89,31 +92,34 @@ export default function StudioSequence() {
         ref={rootRef}
         className="hidden lg:flex lg:h-screen lg:items-center lg:overflow-hidden"
       >
-        {/* RTL: the caption column is first in DOM order, so it sits on the
-            right and is read before the image. */}
+        {/* The caption column is first in DOM order, so grid places it on the
+            reading edge in either language: right in Hebrew, left in English.
+            No direction-specific override needed. */}
         <div className="mx-auto grid w-full max-w-6xl grid-cols-[24rem_1fr] items-center gap-14 px-8">
           <div className="relative">
             {/* Stage progress rail */}
             <ol className="mb-8 flex gap-2" aria-hidden="true">
-              {SPACE.steps.map((step) => (
+              {space.steps.map((step) => (
                 <li key={step.title} className="h-0.5 flex-1 overflow-hidden rounded-pill bg-line">
-                  <span data-dot className="amber-fill block h-full origin-right" />
+                  {/* Fills along the reading direction in each language. */}
+                  <span
+                    data-dot
+                    className="amber-fill block h-full origin-left rtl:origin-right"
+                  />
                 </li>
               ))}
             </ol>
 
             {/* Captions are stacked; only one is visible at a time. */}
             <div className="relative min-h-44">
-              {SPACE.steps.map((step, i) => (
+              {space.steps.map((step, i) => (
                 <div
                   key={step.title}
                   data-caption
                   className="gpu absolute inset-x-0 top-0"
                   aria-hidden={i > 0 ? 'true' : undefined}
                 >
-                  <p className="eyebrow mb-4">
-                    שלב {i + 1} מתוך {SPACE.steps.length}
-                  </p>
+                  <p className="eyebrow mb-4">{stage(i)}</p>
                   <h3 className="h-item text-[clamp(1.5rem,2.4vw,2rem)] text-ink">{step.title}</h3>
                   <p className="body-lg mt-4 text-muted">{step.caption}</p>
                 </div>
@@ -122,7 +128,7 @@ export default function StudioSequence() {
           </div>
 
           <div className="relative aspect-16/10 overflow-hidden rounded-hero bg-surface shadow-float-lg">
-            {SPACE.steps.map((step, i) => (
+            {space.steps.map((step, i) => (
               <div key={step.title} data-frame className="gpu absolute inset-0">
                 <Image
                   src={`${step.image}.webp`}
@@ -140,7 +146,7 @@ export default function StudioSequence() {
 
       {/* ---------- Mobile / reduced-motion: plain stacked sequence ---------- */}
       <ol className="mx-auto mt-16 grid max-w-6xl gap-16 px-5 pb-28 sm:px-8 lg:hidden">
-        {SPACE.steps.map((step, i) => (
+        {space.steps.map((step, i) => (
           <li key={step.title}>
             {/* Alternating tilt so the stack reads as scattered frames, not a grid. */}
             <div
@@ -157,9 +163,7 @@ export default function StudioSequence() {
                 className="object-cover"
               />
             </div>
-            <p className="eyebrow mt-7">
-              שלב {i + 1} מתוך {SPACE.steps.length}
-            </p>
+            <p className="eyebrow mt-7">{stage(i)}</p>
             <h3 className="h-item mt-2 text-2xl text-ink">{step.title}</h3>
             <p className="body-lg mt-3 text-muted">{step.caption}</p>
           </li>

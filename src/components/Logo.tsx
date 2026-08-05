@@ -1,6 +1,6 @@
-import { STUDIO } from '@/lib/site'
-
 interface LogoProps {
+  /** "Florentin · Tel Aviv", already in the current language. */
+  location?: string
   /** `dark` = graphite marks for light backgrounds. `light` = white for photos. */
   tone?: 'dark' | 'light'
   /** Monogram diameter in px. The wordmark scales with it. */
@@ -21,6 +21,7 @@ export default function Logo({
   tone = 'dark',
   size = 40,
   markOnly = false,
+  location,
   className = '',
 }: LogoProps) {
   const stroke = tone === 'light' ? '#ffffff' : 'var(--color-ink)'
@@ -58,12 +59,14 @@ export default function Logo({
           >
             M.K STUDIO
           </span>
-          <span
-            className="mt-1 tracking-[0.22em]"
-            style={{ fontSize: size * 0.235, color: sub }}
-          >
-            {STUDIO.neighborhood} · {STUDIO.city}
-          </span>
+          {location && (
+            <span
+              className="mt-1 tracking-[0.22em]"
+              style={{ fontSize: size * 0.235, color: sub }}
+            >
+              {location}
+            </span>
+          )}
         </span>
       )}
     </span>

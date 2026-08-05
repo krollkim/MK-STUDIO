@@ -1,12 +1,7 @@
 import Link from 'next/link'
 import { WhatsAppIcon } from './WhatsAppCTA'
-import { STUDIO, WHATSAPP_URL } from '@/lib/site'
-
-const LEGAL_LINKS = [
-  { href: '/accessibility', label: 'הצהרת נגישות' },
-  { href: '/terms', label: 'תנאי שימוש' },
-  { href: '/privacy', label: 'מדיניות פרטיות' },
-]
+import { STUDIO, buildWhatsAppUrl } from '@/lib/site'
+import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
 
 /**
  * The footer is a silver plate with the wordmark pressed into it.
@@ -18,8 +13,14 @@ const LEGAL_LINKS = [
  * The seam above it is the only one left on the site, and carries the only
  * amber dot on the page.
  */
-export default function Footer() {
+export default function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const year = new Date().getFullYear()
+
+  const legalLinks = [
+    { href: '/accessibility', label: dict.legal.accessibility.title },
+    { href: '/terms', label: dict.legal.terms.title },
+    { href: '/privacy', label: dict.legal.privacy.title },
+  ]
 
   return (
     <>
@@ -39,52 +40,45 @@ export default function Footer() {
             </span>
             <div>
               <p className="font-serif text-[21px] leading-tight text-ink">
-                אולפן הקלטות והפקה מוזיקלית
+                {dict.common.footerTagline}
               </p>
               <p className="mt-1.5 text-[13px] tracking-[0.3em] text-[#6E665F]">
-                {STUDIO.neighborhood} · {STUDIO.city}
+                {dict.common.locationShort}
               </p>
             </div>
           </div>
 
           {/* WhatsApp only. No phone number in the footer. */}
           <a
-            href={WHATSAPP_URL}
+            href={buildWhatsAppUrl(dict.cta.whatsappMessage)}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2.5 self-center text-[18px] font-medium text-amber-deep transition-colors hover:text-[#B4581F] md:self-start md:pt-3.5"
           >
-            <span
-              aria-hidden="true"
-              className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#B4581F]"
-            />
+            <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#B4581F]" />
             <WhatsAppIcon size={18} />
-            וואטסאפ
+            {dict.common.whatsappWord}
           </a>
         </div>
 
         {/* ---- the pressed wordmark ---- */}
         <div className="site-footer__mark">M.K STUDIO</div>
 
-        {/* ---- legal row ---- */}
-        {/* The floating WhatsApp + accessibility buttons are pinned to the
-            bottom-LEFT of the viewport and together occupy the bottom 152px.
-            They are global, so instead of moving them the footer clears them:
-            pb-40 (160px) puts the legal links above that band, and centring
-            moves them off the left edge too. Both verified by hit-testing all
-            three links, not by eye. */}
+        {/* Extra bottom padding on phones: the floating WhatsApp and
+            accessibility buttons occupy the bottom 152px of the viewport and
+            sat on top of the last legal link. Verified by hit-testing. */}
         <div className="relative mt-10 flex flex-col items-center gap-6 px-5 pb-40 text-center sm:px-12 md:flex-row md:items-center md:justify-between md:gap-8 md:pb-11 md:text-start lg:px-24">
           <p className="text-[13px] text-[#6E665F]">
-            © {STUDIO.name} {year} · כל הזכויות שמורות
+            © {STUDIO.name} {year} · {dict.common.rights}
           </p>
           <nav
-            aria-label="קישורים משפטיים"
+            aria-label={dict.common.legalNav}
             className="flex flex-wrap justify-center gap-x-6.5 gap-y-3 md:justify-start"
           >
-            {LEGAL_LINKS.map((l) => (
+            {legalLinks.map((l) => (
               <Link
                 key={l.href}
-                href={l.href}
+                href={localePath(locale, l.href)}
                 className="text-[15px] text-[#4E4842] transition-colors hover:text-ink"
               >
                 {l.label}

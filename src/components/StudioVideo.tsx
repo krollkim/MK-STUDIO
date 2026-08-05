@@ -7,6 +7,8 @@ interface StudioVideoProps {
   poster: string
   /** Accessible description of what the video shows. */
   label: string
+  /** "Play the video", already in the current language. */
+  playLabel: string
   className?: string
 }
 
@@ -15,7 +17,13 @@ interface StudioVideoProps {
  * visitor actually presses play (`preload="none"`), which keeps the hero of the
  * page fast on mobile data.
  */
-export default function StudioVideo({ src, poster, label, className = '' }: StudioVideoProps) {
+export default function StudioVideo({
+  src,
+  poster,
+  label,
+  playLabel,
+  className = '',
+}: StudioVideoProps) {
   const ref = useRef<HTMLVideoElement>(null)
   const [started, setStarted] = useState(false)
 
@@ -44,7 +52,7 @@ export default function StudioVideo({ src, poster, label, className = '' }: Stud
         <button
           type="button"
           onClick={play}
-          aria-label={`הפעלת הסרטון: ${label}`}
+          aria-label={`${playLabel}: ${label}`}
           className="group absolute inset-0 flex items-center justify-center bg-ink/25 transition-colors hover:bg-ink/15"
         >
           <span className="flex h-[68px] w-[68px] items-center justify-center rounded-full bg-white/95 shadow-[0_10px_34px_rgba(0,0,0,0.35)] transition-transform duration-200 group-hover:scale-105">

@@ -79,9 +79,14 @@
   box-sizing: border-box;
 }
 
-/* RTL is also set on <html dir="rtl"> in layout.tsx — belt-and-suspenders. */
+/* ⚠️ Do NOT set `direction` here.
+   The layout sets `dir` on <html> per locale. A `direction` declaration in
+   author CSS beats the `dir` attribute (which only maps to a UA rule), so
+   hardcoding `direction: rtl` here silently forces the English site to render
+   right-to-left — full stops jumping to the start of lines, "20+" reading as
+   "+20", the whole nav mirrored — while `document.documentElement.dir` still
+   reports "ltr". Direction comes from the attribute alone. */
 html {
-  direction: rtl;
   scroll-behavior: smooth;
   /* Clears the sticky header so anchor jumps don't hide the heading behind it. */
   scroll-padding-top: 5.5rem;
@@ -449,6 +454,15 @@ body {
   }
 
   .amber-text {
+    /* inline-block is load-bearing, not cosmetic.
+       `background-clip: text` paints the gradient across the ELEMENT'S BOX and
+       then clips it to the glyphs. On a full-width block the glyphs sit at
+       whichever end the writing direction puts them, so the same numeral came
+       out bright in Hebrew (text at the right = the light end) and muddy in
+       English (text at the left = the deep end). Shrinking the box to the text
+       makes the ramp map onto the glyphs themselves, identical in both
+       directions. Do not set `block` on an element using this class. */
+    display: inline-block;
     background-image: linear-gradient(
       135deg,
       var(--color-amber-deep) 0%,

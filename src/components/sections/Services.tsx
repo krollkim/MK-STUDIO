@@ -4,29 +4,31 @@ import ScrollReveal from '@/components/ScrollReveal'
 import StaggerReveal from '@/components/StaggerReveal'
 import AmbientWord from '@/components/AmbientWord'
 import WhatsAppCTA from '@/components/WhatsAppCTA'
-import { SERVICES } from '@/lib/content'
+import type { Dictionary } from '@/lib/i18n'
 
 /**
  * Section 3 — the three services as an editorial list, then the outcome as a
  * warm-dark statement block with the brand poster floating beside it.
  */
-export default function Services() {
+export default function Services({ dict }: { dict: Dictionary }) {
+  const { services } = dict
+
   return (
     <section
       id="services"
       className="silver-deep relative overflow-hidden px-5 py-32 sm:px-8 lg:py-48"
     >
       {/* Anchored to the gutter beside the services list, below the heading
-          block — at the top it sat directly behind the H2 and disappeared. */}
+          block; at the top it sat behind the H2 and disappeared. */}
       <AmbientWord position="start" className="top-[38%]">
-        צליל
+        {services.ambient}
       </AmbientWord>
 
       <div className="relative mx-auto max-w-6xl">
-        <SectionHeading eyebrow={SERVICES.eyebrow} title={SERVICES.title} lead={SERVICES.lead} />
+        <SectionHeading eyebrow={services.eyebrow} title={services.title} lead={services.lead} />
 
         <StaggerReveal columns={1} stagger={0.1} className="mt-24 flex flex-col">
-          {SERVICES.items.map((item) => (
+          {services.items.map((item) => (
             <article
               key={item.title}
               className="group grid gap-x-12 gap-y-5 border-t border-line py-11 lg:grid-cols-[24rem_1fr] lg:py-16"
@@ -52,20 +54,19 @@ export default function Services() {
           ))}
         </StaggerReveal>
 
-        {/* The outcome — what the visitor actually walks away with. */}
+        {/* The outcome: what the visitor actually walks away with. */}
         <ScrollReveal className="mt-24 lg:mt-32">
           {/* 24rem, not 20rem: the text column was 640px wide while its own
               content is capped at max-w-xl (576px), so the extra 64px was dead
-              space. Giving it to the poster makes its lettering legible without
-              reflowing a single line of copy. */}
+              space. Giving it to the poster makes its lettering legible. */}
           <div className="relative grid items-center gap-12 rounded-hero bg-night px-7 py-14 sm:px-12 lg:grid-cols-[1fr_24rem] lg:gap-16 lg:px-16 lg:py-20">
             <div>
-              <p className="eyebrow mb-6 text-accent-lit">{SERVICES.outcome.eyebrow}</p>
-              <h3 className="h-block text-white">{SERVICES.outcome.title}</h3>
-              <p className="body-lg mt-7 max-w-xl text-white/70">{SERVICES.outcome.body}</p>
+              <p className="eyebrow mb-6 text-accent-lit">{services.outcome.eyebrow}</p>
+              <h3 className="h-block text-white">{services.outcome.title}</h3>
+              <p className="body-lg mt-7 max-w-xl text-white/70">{services.outcome.body}</p>
 
               <ul className="mt-10 space-y-4">
-                {SERVICES.outcome.points.map((p) => (
+                {services.outcome.points.map((p) => (
                   <li key={p} className="body-lg flex gap-3.5 text-white/90">
                     <svg
                       width="20"
@@ -86,7 +87,7 @@ export default function Services() {
                 ))}
               </ul>
 
-              <WhatsAppCTA className="mt-11" />
+              <WhatsAppCTA cta={dict.cta} className="mt-11" />
             </div>
 
             {/* The brandmark is a square poster — a square frame keeps the
@@ -94,7 +95,7 @@ export default function Services() {
             <div className="relative aspect-square overflow-hidden rounded-card shadow-float-lg lg:rotate-2">
               <Image
                 src="/images/studio-brandmark.webp"
-                alt="גרפיקת המותג של M.K Studio: עמדת ההקלטה עם מיקרופון, מוניטורים, פסנתר וגיטרות"
+                alt={services.outcome.posterAlt}
                 fill
                 sizes="(max-width: 1024px) 100vw, 24rem"
                 className="object-cover"

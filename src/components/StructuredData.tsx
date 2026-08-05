@@ -1,101 +1,63 @@
-import { PHONE_TEL, SITE_URL, STUDIO, WHATSAPP_URL } from '@/lib/site'
+import { PHONE_TEL, SITE_URL, STUDIO, buildWhatsAppUrl } from '@/lib/site'
+import { LOCALE_TAG, localePath, type Dictionary, type Locale } from '@/lib/i18n'
 
 /**
- * JSON-LD for the studio. LocalBusiness so Google (and AI assistants) can state
- * what M.K Studio is, where it is and what it offers, plus a short FAQ that
- * mirrors the on-page copy.
+ * JSON-LD for the studio, per locale.
+ *
+ * `@id` is shared across languages on purpose: it is the same business, so
+ * search engines should merge the two pages into one entity rather than treat
+ * them as two studios. Only the human-readable fields change.
+ *
+ * `telephone` stays here even though the landing page shows no phone number:
+ * this is machine-readable metadata, not a visible contact point, and it is
+ * what local search uses.
  */
-const localBusiness = {
-  '@context': 'https://schema.org',
-  '@type': 'MusicGroup',
-  additionalType: 'https://schema.org/LocalBusiness',
-  '@id': `${SITE_URL}/#studio`,
-  name: STUDIO.name,
-  legalName: STUDIO.legalName,
-  description:
-    'אולפן הקלטות והפקה מוזיקלית בפלורנטין, תל אביב. הפקת שירים מקצה לקצה: הלחנה, נגינה, הקלטה, מיקס ומאסטרינג. הקלטות ולימודי גיטרה.',
-  url: SITE_URL,
-  image: `${SITE_URL}/images/studio-brandmark.png`,
-  telephone: PHONE_TEL,
-  founder: { '@type': 'Person', name: STUDIO.owner },
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: STUDIO.city,
-    addressRegion: STUDIO.neighborhood,
-    addressCountry: 'IL',
-  },
-  areaServed: { '@type': 'City', name: STUDIO.city },
-  sameAs: [WHATSAPP_URL],
-  slogan: STUDIO.tagline,
-  makesOffer: [
-    {
-      '@type': 'Offer',
-      itemOffered: {
-        '@type': 'Service',
-        name: 'הפקת שירים',
-        description:
-          'מעטפת הפקה מלאה: הלחנה, עיבוד, נגינה, הקלטת שירה, מיקס ומאסטרינג, עד שיר ממוסטר מוכן להפצה.',
-      },
-    },
-    {
-      '@type': 'Offer',
-      itemOffered: {
-        '@type': 'Service',
-        name: 'אולפן הקלטות',
-        description: 'הקלטות שירה, גיטרות, פודקאסט ודמו בחלל מטופל אקוסטית בפלורנטין.',
-      },
-    },
-    {
-      '@type': 'Offer',
-      itemOffered: {
-        '@type': 'Service',
-        name: 'לימודי גיטרה',
-        description: 'שיעורי גיטרה אישיים אחד-על-אחד, לכל רמה, מותאמים לשירים שהתלמיד רוצה לנגן.',
-      },
-    },
-  ],
-}
+export default function StructuredData({
+  locale,
+  dict,
+}: {
+  locale: Locale
+  dict: Dictionary
+}) {
+  const pageUrl = `${SITE_URL}${localePath(locale)}`
 
-const faq = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'איפה נמצא האולפן?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: `${STUDIO.name} נמצא ב${STUDIO.neighborhood}, ${STUDIO.city}.`,
-      },
+  const localBusiness = {
+    '@context': 'https://schema.org',
+    '@type': 'MusicGroup',
+    additionalType: 'https://schema.org/LocalBusiness',
+    '@id': `${SITE_URL}/#studio`,
+    name: STUDIO.name,
+    description: dict.structuredData.description,
+    inLanguage: LOCALE_TAG[locale],
+    url: pageUrl,
+    image: `${SITE_URL}/images/studio-brandmark.png`,
+    telephone: PHONE_TEL,
+    founder: { '@type': 'Person', name: STUDIO.owner },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: STUDIO.city,
+      addressRegion: STUDIO.neighborhood,
+      addressCountry: 'IL',
     },
-    {
-      '@type': 'Question',
-      name: 'איך מתחילים תהליך?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'שולחים הודעה בוואטסאפ, קובעים סשן היכרות באולפן ללא עלות, ומשם ממשיכים לתהליך ההפקה: הלחנה, עיבוד, נגינה, הקלטה, מיקס ומאסטרינג.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'האם סשן ההיכרות באמת בחינם?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'כן. הפגישה הראשונה באולפן היא ללא עלות וללא התחייבות. שומעים מה כתבת ומבינים לאן זה יכול ללכת.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'מה מקבלים בסוף התהליך?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'שיר ממוסטר מוכן להפצה בכל פלטפורמות ההאזנה, יחד עם הכוונה מה לעשות איתו הלאה.',
-      },
-    },
-  ],
-}
+    areaServed: { '@type': 'City', name: STUDIO.city },
+    sameAs: [buildWhatsAppUrl(dict.cta.whatsappMessage)],
+    makesOffer: dict.structuredData.services.map((s) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: s.name, description: s.description },
+    })),
+  }
 
-export default function StructuredData() {
+  const faq = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: LOCALE_TAG[locale],
+    mainEntity: dict.structuredData.faq.map((entry) => ({
+      '@type': 'Question',
+      name: entry.question,
+      acceptedAnswer: { '@type': 'Answer', text: entry.answer },
+    })),
+  }
+
   return (
     <>
       <script
