@@ -41,7 +41,15 @@ export default function Hero({ dict }: { dict: Dictionary }) {
       />
 
       <div className="mx-auto w-full max-w-6xl">
-        <Logo tone="light" size={58} location={dict.common.locationShort} className="mb-10 sm:mb-12" />
+        {/* The mark alone, large. The eyebrow below and the headline under it
+            already name the studio, and this is the one place with enough room
+            for the amber trace to actually read. */}
+        <Logo
+          variant="mark"
+          tone="light"
+          size={104}
+          className="mb-10 sm:mb-12"
+        />
 
         <p className="mb-7 flex items-center gap-3 text-[13px] font-medium tracking-wide text-white/60">
           <span aria-hidden="true" className="h-px w-10 bg-accent-lit" />

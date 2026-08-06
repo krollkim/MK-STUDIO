@@ -5,8 +5,6 @@
  * (src/lib/i18n) so it exists once per locale — including the prefilled
  * WhatsApp message, which is why `buildWhatsAppUrl` takes the message rather
  * than owning one.
- *
- * ⚠️ BEFORE GOING LIVE — SITE_URL is still a placeholder.
  */
 
 /* ---------------------------------------------------------------------------
@@ -36,7 +34,15 @@ export const PHONE_TEL = '+972528777017'
 /** Contact email, legal pages only. */
 export const EMAIL = 'matan73737@gmail.com'
 
-export const SITE_URL = 'https://mkstudio.co.il' // TODO: real domain (canonical + hreflang + JSON-LD)
+/**
+ * Canonical origin. Feeds `metadataBase`, every canonical + hreflang link, the
+ * sitemap, robots.txt and the JSON-LD `@id`.
+ *
+ * NO trailing slash. Every consumer builds URLs as `${SITE_URL}${path}` and a
+ * path always starts with '/', so a trailing slash here produces `//en` and
+ * splits each page into two URLs as far as a crawler is concerned.
+ */
+export const SITE_URL = 'https://mk-records.com'
 
 /** Language-independent facts. Names stay Latin in both locales. */
 export const STUDIO = {

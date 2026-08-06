@@ -73,11 +73,13 @@ export default function Navbar({ locale, dict, overDarkHero = false }: NavbarPro
           tabIndex={onDark ? -1 : undefined}
           aria-hidden={onDark ? 'true' : undefined}
         >
+          {/* 40px, not 36: below 40 the component falls back to the
+              small-size cut, and the bar has 72px of height to spare. */}
           <span className="sm:hidden">
-            <Logo size={36} markOnly location={dict.common.locationShort} />
+            <Logo variant="mark" size={34} tone={onDark ? 'light' : 'dark'} />
           </span>
           <span className="hidden sm:block">
-            <Logo size={36} location={dict.common.locationShort} />
+            <Logo variant="lockup" size={40} tone={onDark ? 'light' : 'dark'} />
           </span>
         </a>
 

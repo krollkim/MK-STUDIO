@@ -338,18 +338,11 @@ body {
     }
   }
 
-  .site-footer__monogram {
-    display: grid;
-    place-items: center;
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-    border-radius: 999px;
-    border: 1px solid rgb(26 25 23 / 0.3);
-    font-family: var(--font-serif);
-    font-size: 18px;
-    color: #1a1917;
-  }
+  /* `.site-footer__monogram` was removed with the real logo drop. It was a
+     60px circle with a hairline border holding the letters "MK" — which is
+     the old logo the 4a mark replaced. The mark is free-standing and the
+     asset pack is explicit that it never sits in a frame. Don't bring it
+     back; the footer uses the lockup now. */
 }
 
 /* ============================================================

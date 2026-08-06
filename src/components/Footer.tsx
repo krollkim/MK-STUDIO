@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Logo from './Logo'
 import { WhatsAppIcon } from './WhatsAppCTA'
 import { STUDIO, buildWhatsAppUrl } from '@/lib/site'
 import { localePath, type Dictionary, type Locale } from '@/lib/i18n'
@@ -34,15 +35,20 @@ export default function Footer({ locale, dict }: { locale: Locale; dict: Diction
              Stacked and centred while it is a column; the desktop
              space-between row is untouched from md up. */}
         <div className="relative flex flex-col items-center gap-8 px-5 text-center sm:px-12 md:flex-row md:items-start md:justify-between md:gap-12 md:text-start lg:px-24">
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-5">
-            <span className="site-footer__monogram" aria-hidden="true">
-              MK
-            </span>
-            <div>
-              <p className="font-serif text-[21px] leading-tight text-ink">
+          {/* The circle is gone. It was the old logo's frame, and the mark is a
+              free-standing mark — the pack is explicit that it never sits in
+              one. The lockup carries the name; the tagline sits beneath it. */}
+          <div className="flex flex-col items-center gap-5 sm:items-start">
+            <Logo variant="lockup" size={48} />
+            {/* The location used to be a third line inside the lockup, which
+                stretched the wordmark column and pushed "M.K STUDIO" off the
+                mark's centre. It belongs here instead, under the tagline, where
+                it reads as an address rather than as part of the mark. */}
+            <div className="flex flex-col items-center gap-1.5 sm:items-start">
+              <p className="font-serif text-[19px] leading-tight text-ink">
                 {dict.common.footerTagline}
               </p>
-              <p className="mt-1.5 text-[13px] tracking-[0.3em] text-[#6E665F]">
+              <p className="text-[14px] leading-tight text-muted">
                 {dict.common.locationShort}
               </p>
             </div>

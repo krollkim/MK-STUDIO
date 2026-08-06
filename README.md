@@ -124,10 +124,11 @@ npm run build
 | טלפון לתצוגה | `PHONE_DISPLAY` | `052-877-7017` ✅ |
 | טלפון ל-`tel:` | `PHONE_TEL` | `+972528777017` ✅ |
 | מייל | `EMAIL` | `matan73737@gmail.com` ✅ |
-| דומיין (canonical, sitemap, JSON-LD) | `SITE_URL` | `https://mkstudio.co.il` — **placeholder** |
+| דומיין (canonical, sitemap, JSON-LD) | `SITE_URL` | `https://mk-records.com` ✅ |
 
-**נשאר רק הדומיין.** הוא מזין את ה-canonical, את ה-sitemap ואת ה-JSON-LD, אז אם
-הכתובת הסופית שונה חייבים לעדכן אותו לפני עלייה.
+**`SITE_URL` בלי סלאש בסוף.** כל הצרכנים בונים כתובות בתור `${SITE_URL}${path}`
+וכל path מתחיל ב-`/`, כך שסלאש נוסף מייצר `//en` ומפצל כל עמוד לשתי כתובות
+מבחינת מנוע חיפוש.
 
 ## ערוץ קשר אחד
 
