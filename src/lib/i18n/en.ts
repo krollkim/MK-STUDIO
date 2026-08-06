@@ -68,8 +68,8 @@ export const en: Dictionary = {
 
   hero: {
     eyebrow: 'Recording & music production · Florentin, Tel Aviv',
-    headline: 'We turn your words',
-    headlineAccent: 'into a finished song',
+    headline: 'We turn your words into a song',
+    headlineAccent: 'made to be heard',
     subhead:
       "You've written something you believe in and no idea how to turn it into a song? That's exactly what I'm here for. Writing, playing, tracking, mixing and mastering, all under one roof, and you walk out with a song that's ready to release.",
     secondaryCta: { label: 'What happens in the first session', href: '#process' },
