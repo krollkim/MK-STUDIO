@@ -134,21 +134,9 @@ export function QuietLink({
  * naturally rests away from the text in each direction. The accessibility
  * launcher is given the matching `side` in the layout so the two stay paired.
  */
-export function WhatsAppFloat({ cta }: { cta: CtaCopy & { floatLabel: string } }) {
-  return (
-    <a
-      href={buildWhatsAppUrl(cta.whatsappMessage)}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={cta.floatLabel}
-      className="btn-amber fixed bottom-24 end-6 z-40 flex h-14 w-14 items-center justify-center rounded-full hover:scale-105"
-    >
-      <span className="inline-flex">
-        <WhatsAppIcon size={26} />
-      </span>
-    </a>
-  )
-}
+/* The floating button now lives in WhatsAppFloat.tsx. It has to watch the
+   scroll position to stay out of the hero, and that needs client JS, which this
+   module must not require: every section imports WhatsAppCTA from here. */
 
 /** Convenience: the shape most callers pass. */
 export type CtaDict = Dictionary['cta']

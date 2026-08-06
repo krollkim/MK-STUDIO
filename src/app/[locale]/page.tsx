@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import StructuredData from '@/components/StructuredData'
-import { WhatsAppFloat } from '@/components/WhatsAppCTA'
+import WhatsAppFloat from '@/components/WhatsAppFloat'
 import Hero from '@/components/sections/Hero'
 import Audience from '@/components/sections/Audience'
 import Services from '@/components/sections/Services'
@@ -38,7 +38,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <Contact dict={dict} />
       </main>
       <Footer locale={locale} dict={dict} />
-      <WhatsAppFloat cta={{ ...dict.cta, floatLabel: dict.cta.floatLabel }} />
+      <WhatsAppFloat cta={dict.cta} />
     </>
   )
 }

@@ -21,6 +21,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { usePastHero } from "@/lib/usePastHero";
 
 const SCALE_STEPS = [1, 1.15, 1.3, 1.5, 1.75, 2] as const;
 const STORAGE_KEY = "a11y:prefs:v1";
@@ -162,6 +163,19 @@ export default function AccessibilityWidget({
 }: AccessibilityWidgetProps) {
   const t = { ...BASE_THEME, ...theme };
   const [open, setOpen] = useState(false);
+  const pastHero = usePastHero();
+
+  /**
+   * Docked out of the way while the hero is on screen, so the launcher does not
+   * sit on top of the hero's own CTA on a phone.
+   *
+   * `|| open` is the important half. Without it, Alt+A over the hero would
+   * toggle a panel nobody can see, which would make the accessibility controls
+   * genuinely unreachable in the first viewport rather than merely tucked away.
+   * With it, the keyboard path always works and using it brings the whole
+   * widget back into view.
+   */
+  const docked = !pastHero && !open;
   const [prefs, setPrefs] = useState<Prefs>(DEFAULTS);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const launcherRef = useRef<HTMLButtonElement | null>(null);
@@ -354,6 +368,17 @@ export default function AccessibilityWidget({
           // launcher. Clicks pass through the container; the panel and the
           // launcher opt back in individually.
           pointerEvents: "none",
+          // Hidden over the hero. `visibility` as well as opacity, because an
+          // invisible launcher that is still in the tab order is worse than a
+          // visible one in the way — hidden takes it out of tab order and the
+          // launcher does not set visibility itself, so it inherits this.
+          // Safe on this element: opacity creates a stacking context but this
+          // one already has `position: fixed` + a z-index, so nothing changes,
+          // and it is not a containing block for fixed DESCENDANTS either —
+          // only transform / filter / perspective do that.
+          opacity: docked ? 0 : 1,
+          visibility: docked ? "hidden" : "visible",
+          transition: "opacity .3s ease, visibility .3s ease",
         }}
       >
         <div
