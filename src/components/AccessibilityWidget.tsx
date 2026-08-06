@@ -137,7 +137,16 @@ html[data-a11y-contrast="light"] body *:not([data-a11y-ui]):not([data-a11y-ui] *
 }
 html[data-a11y-contrast="light"] body { background: #fff !important; }
 html[data-a11y-contrast="light"] body a:not([data-a11y-ui] a) { color: #0043a8 !important; }
-html[data-a11y-contrast="mono"] body { filter: grayscale(1) contrast(1.08) !important; }
+/* Grayscale goes on <html>, NOT on body.
+   A filter makes the element a containing block for fixed-position
+   descendants — so with the filter on body, every position:fixed thing
+   (the WhatsApp float, this widget's own launcher, the reading guide)
+   stopped measuring from the viewport and started measuring from the body
+   box instead. On a 13,000px-tall page that parks them far below the fold
+   and they look deleted. The Filter Effects spec exempts the document root
+   from creating that containing block, so moving it up one level keeps the
+   exact same visual result with none of the layout damage. */
+html[data-a11y-contrast="mono"] { filter: grayscale(1) contrast(1.08) !important; }
 [data-a11y-ui] :focus-visible { outline: 3px solid var(--a11y-focus) !important; outline-offset: 2px; border-radius: 6px; }
 `;
 
