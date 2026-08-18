@@ -75,9 +75,14 @@ export async function generateMetadata({
          roughly 300KB, and WhatsApp is the only channel this site converts
          through. The PNG cut of this same artwork was 767KB and bought
          nothing visible. Keep any replacement well under that ceiling. */
+      /* The `-v2` in the filename is load-bearing. WhatsApp and Facebook cache
+         a scraped preview against the image URL and will keep serving the old
+         card long after the file behind it changes, so swapping the artwork in
+         place is not enough: new card, new path. Bump the suffix again next
+         time rather than overwriting. */
       images: [
         {
-          url: '/images/og-mk-studio.jpg',
+          url: '/images/og-mk-studio-v2.jpg',
           width: 1200,
           height: 630,
           alt: dict.meta.ogImageAlt,
@@ -88,7 +93,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: dict.meta.title,
       description: dict.meta.description,
-      images: ['/images/og-mk-studio.jpg'],
+      images: ['/images/og-mk-studio-v2.jpg'],
     },
     robots: { index: true, follow: true },
   }
