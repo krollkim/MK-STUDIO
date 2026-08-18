@@ -16,16 +16,8 @@ export const en: Dictionary = {
     title: 'M.K Studio | Recording & Music Production in Florentin, Tel Aviv',
     description:
       "Matan's recording and music production studio in Florentin, Tel Aviv. Songs produced end to end: writing, playing, tracking, mixing and mastering. Studio time and guitar lessons. First session is free.",
-    keywords: [
-      'recording studio',
-      'recording studio Tel Aviv',
-      'music production',
-      'song production',
-      'mixing and mastering',
-      'guitar lessons',
-      'Florentin',
-      'M.K Studio',
-    ],
+    ogImageAlt:
+      'The M.K Studio share card: "We turn your words into a song made to be heard", a recording and music production studio in Florentin, Tel Aviv.',
   },
 
   common: {
@@ -243,6 +235,16 @@ export const en: Dictionary = {
   structuredData: {
     description:
       'Recording and music production studio in Florentin, Tel Aviv. Songs produced end to end: writing, playing, tracking, mixing and mastering. Studio time and guitar lessons.',
+    address: {
+      /* "Perets", not "Peretz": this is the spelling on the Google Maps
+         listing, and the two records have to read identically. */
+      streetAddress: 'Y.L. Perets St 3',
+      addressLocality: 'Tel Aviv-Jaffa',
+    },
+    person: {
+      name: 'Matan',
+      jobTitle: 'Music producer',
+    },
     services: [
       {
         name: 'Song production',

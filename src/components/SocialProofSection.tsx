@@ -29,11 +29,15 @@
  *
  * Messages: pass `testimonials`. To use real cropped screenshots instead of
  * recreated bubbles, give a testimonial an `image` — it renders the image and
- * ignores the text fields. You can mix images and text bubbles freely:
- *   { image: "/proof/sarah.png", imageAlt: "Message from Sarah" }
+ * ignores the text fields. You can mix images and text bubbles freely. The
+ * image must be a STATIC IMPORT, not a path string, so that next/image knows
+ * its intrinsic size:
+ *   import sarah from "../../public/proof/sarah.png";
+ *   { image: sarah, imageAlt: "Message from Sarah" }
  */
 
 import { useLayoutEffect, useRef, useState } from "react";
+import Image, { type StaticImageData } from "next/image";
 import gsap from "gsap";
 
 /* ------------------------------- types ---------------------------------- */
@@ -83,8 +87,21 @@ export interface Testimonial {
   /** Timestamp shown in the bubble, e.g. "09:14". */
   time?: string;
   color?: string;
-  /** Optional cropped screenshot. When set, the image is shown instead of a bubble. */
-  image?: string;
+  /**
+   * Optional cropped screenshot. When set, the image is shown instead of a
+   * bubble.
+   *
+   * A static import, not a path: it carries the file's intrinsic width and
+   * height, which is what lets next/image reserve the right box before the
+   * screenshot lands. With a bare path the strip has zero height until the
+   * images decode and then snaps to full height mid-scroll.
+   */
+  image?: StaticImageData;
+  /**
+   * Real alt text. These are content images — a reader who cannot see the
+   * screenshot loses the entire testimonial without it — so it comes from the
+   * dictionary and is never left to the filename fallback.
+   */
   imageAlt?: string;
   /**
    * Redact the sender: blank bars replace the avatar and the name. Use when a
@@ -309,10 +326,13 @@ function Sticker({ t, index }: { t: Testimonial; index: number }) {
     <div className="mr-6 flex shrink-0 flex-col rounded-[20px] bg-white p-[7px] shadow-[0_12px_32px_rgba(11,20,26,0.13),0_2px_5px_rgba(11,20,26,0.08)]">
       {t.image ? (
         // Real cropped screenshot — always preferred over a recreation.
-        // Capped by WIDTH so each keeps its own natural height.
-        <img
+        // Capped by WIDTH so each keeps its own natural height; the intrinsic
+        // size rides along on the static import, so the box is reserved at the
+        // correct aspect from the first frame.
+        <Image
           src={t.image}
           alt={t.imageAlt ?? t.name ?? "Customer testimonial"}
+          sizes="(max-width: 34rem) 78vw, 26rem"
           className="block h-auto w-[26rem] max-w-[78vw] rounded-[14px]"
           draggable={false}
         />

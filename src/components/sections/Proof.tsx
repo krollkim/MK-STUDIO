@@ -3,6 +3,13 @@ import SocialProofSection, {
   type VideoTestimonial,
 } from '@/components/SocialProofSection'
 import type { Dictionary } from '@/lib/i18n'
+/* Static imports, not paths: each carries its own intrinsic width and height,
+   which is what next/image needs to reserve the box before the screenshot
+   decodes. The three crops have genuinely different shapes (900×600, 866×900,
+   820×300), so there is no single fallback aspect that would do. */
+import reviewKarin from '../../../public/proof/review-karin.png'
+import reviewIgar from '../../../public/proof/review-igar.png'
+import reviewNaftali from '../../../public/proof/review-naftali.png'
 
 /**
  * Section 6 — social proof. Renders the existing SocialProofSection component;
@@ -14,8 +21,9 @@ import type { Dictionary } from '@/lib/i18n'
  *
  * ➕ TO ADD THE THIRD VIDEO: drop the file in /public/proof, fill in the third
  *    entry of VIDEO_MEDIA below, and give it a name/role in both dictionaries.
- * ➕ TO ADD MORE WRITTEN REVIEWS: crop the screenshot into /public/proof, push
- *    it onto REVIEW_IMAGES, and add its alt text to `proof.reviewAlts`.
+ * ➕ TO ADD MORE WRITTEN REVIEWS: crop the screenshot into /public/proof, add a
+ *    static import for it above, push that onto REVIEW_IMAGES, and add its alt
+ *    text to `proof.reviewAlts` in BOTH dictionaries.
  */
 const VIDEO_MEDIA: { src?: string; poster?: string; duration?: string; objectPosition?: string }[] =
   [
@@ -32,11 +40,7 @@ const VIDEO_MEDIA: { src?: string; poster?: string; duration?: string; objectPos
     {},
   ]
 
-const REVIEW_IMAGES = [
-  '/proof/review-karin.png',
-  '/proof/review-igar.png',
-  '/proof/review-naftali.png',
-]
+const REVIEW_IMAGES = [reviewKarin, reviewIgar, reviewNaftali]
 
 export default function Proof({ dict }: { dict: Dictionary }) {
   const { proof } = dict

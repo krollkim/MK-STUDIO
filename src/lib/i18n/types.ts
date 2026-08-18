@@ -23,10 +23,20 @@ export interface LegalBlock {
 }
 
 export interface Dictionary {
+  /**
+   * No `keywords`. Google has ignored the meta keywords tag since 2009, and
+   * keeping a list here only invites someone to wire it back into `<head>`.
+   */
   meta: {
     title: string
     description: string
-    keywords: string[]
+    /**
+     * `alt` for the Open Graph share card. The card itself is one shared image
+     * carrying Hebrew artwork, but the alt describes it in the reader's own
+     * language — it is read out by screen readers on the platforms that expose
+     * it, so it is copy, not a filename.
+     */
+    ogImageAlt: string
   }
 
   common: {
@@ -142,6 +152,26 @@ export interface Dictionary {
 
   structuredData: {
     description: string
+    /**
+     * The studio's postal address, per locale — the two parts of it that are
+     * human-readable place names and so differ between the languages. Taken
+     * word for word off the Google Maps listing, so the schema and the
+     * Business Profile assert the same address.
+     *
+     * `postalCode` and `addressCountry` are NOT here: they are identical in
+     * both languages and live in StructuredData.tsx. There is no
+     * `addressRegion` at all — Google does not use the district for an Israeli
+     * record, and every extra field is one more thing that can fail to match.
+     */
+    address: {
+      streetAddress: string
+      addressLocality: string
+    }
+    /** The producer behind the studio — the `Person` node in the JSON-LD. */
+    person: {
+      name: string
+      jobTitle: string
+    }
     services: { name: string; description: string }[]
     faq: { question: string; answer: string }[]
   }

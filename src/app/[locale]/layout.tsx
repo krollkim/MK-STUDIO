@@ -50,11 +50,13 @@ export async function generateMetadata({
   if (!isLocale(locale)) return {}
   const dict = getDictionary(locale)
 
+  /* No `keywords`. Google dropped the meta keywords tag as a ranking signal in
+     2009 and every major engine followed; the only thing it still reliably does
+     is hand a competitor your target list. The description carries the terms. */
   return {
     metadataBase: new URL(SITE_URL),
     title: dict.meta.title,
     description: dict.meta.description,
-    keywords: dict.meta.keywords,
     alternates: alternatesFor(locale, '/', SITE_URL),
     openGraph: {
       type: 'website',
@@ -63,15 +65,30 @@ export async function generateMetadata({
       siteName: STUDIO.name,
       title: dict.meta.title,
       description: dict.meta.description,
+      /* A purpose-built 1200x630 card, not the square brandmark. Every link
+         unfurler crops to a landscape frame, so a 1:1 source got letterboxed
+         and lost the wordmark. The brandmark is still the studio's `image` in
+         the JSON-LD, which wants the logo rather than a share card.
+
+         JPEG, not PNG, and that is a hard requirement rather than a taste
+         call: WhatsApp silently drops the preview thumbnail on files over
+         roughly 300KB, and WhatsApp is the only channel this site converts
+         through. The PNG cut of this same artwork was 767KB and bought
+         nothing visible. Keep any replacement well under that ceiling. */
       images: [
-        { url: '/images/studio-brandmark.png', width: 1400, height: 1400, alt: STUDIO.name },
+        {
+          url: '/images/og-mk-studio.jpg',
+          width: 1200,
+          height: 630,
+          alt: dict.meta.ogImageAlt,
+        },
       ],
     },
     twitter: {
       card: 'summary_large_image',
       title: dict.meta.title,
       description: dict.meta.description,
-      images: ['/images/studio-brandmark.png'],
+      images: ['/images/og-mk-studio.jpg'],
     },
     robots: { index: true, follow: true },
   }

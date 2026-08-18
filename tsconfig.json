@@ -31,6 +31,7 @@
     "incremental": true,
     "plugins": [{ "name": "next" }]
   },
-  "include": ["src", ".next/types/**/*.ts"],
+  "//include": "next-env.d.ts is generated (and gitignored) but has to be in scope: it declares the image modules, which is what makes `import shot from '…/shot.png'` resolve and hands next/image the file's intrinsic size. Same generated-but-required deal as .next/types.",
+  "include": ["next-env.d.ts", "src", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
