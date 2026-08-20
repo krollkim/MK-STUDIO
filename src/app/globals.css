@@ -168,14 +168,23 @@ body {
   }
 }
 
-/* Small all-caps label above a heading. Uses the deeper accent because it can
-   land on the dark end of the ombré. */
-.eyebrow {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-accent-ink);
+/* Small all-caps label above a heading.
+
+   In @layer components for the same reason .seam and the type scale are: an
+   unlayered rule is emitted after Tailwind and beats every utility regardless
+   of specificity. Unlayered, this `color` silently overrode the
+   `text-accent-lit` that the dark sections apply, so they rendered the
+   light-ground amber (#9c3f17) on #1b1815 — 2.64:1, under the 4.5 that AA
+   needs. Layered, the default still applies everywhere, and a utility can
+   override it where the ground is dark. No colour value changes here. */
+@layer components {
+  .eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-accent-ink);
+  }
 }
 
 /* ============================================================

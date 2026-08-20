@@ -1,0 +1,53 @@
+# Netlify configuration.
+#
+# HEADERS ONLY. Deliberately no [build] block: the build settings live in the
+# Netlify UI, and adding an empty one here would silently take them over.
+#
+# Why this file and not `next.config.ts` headers(): the assets below are served
+# straight off Netlify's CDN, not by Next. Verified against production — a
+# Next-served route like /icon.svg answers with `Cache-Status: "Next.js"; hit`
+# and Next's own Cache-Control, while /logo/*, /proof/* and /manifest.webmanifest
+# carry Netlify's default `public,max-age=0,must-revalidate` and no Next.js
+# cache-status at all. Next never sees those requests, so a Next-level header
+# rule would not reach them.
+#
+# What this fixes: the edge already caches these for a year
+# (`Cache-Status: "Netlify Edge"; hit; ttl=31532280`) — it is the BROWSER that
+# was told to revalidate every single time. Every repeat visitor was paying a
+# round trip per logo, poster and video to be told "304 Not Modified".
+#
+# On the durations: filenames here are NOT content-hashed, so `immutable` would
+# strip any way to correct a bad asset short of renaming it. These are finite
+# and conservative on purpose. If an image is replaced, either rename it (the
+# way og-mk-studio-v2.jpg was) or wait out the window.
+
+# Video and its poster frames: large, and replaced only by adding a new
+# testimonial under a new filename.
+[[headers]]
+  for = "/video/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/proof/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+# Brand marks: stable, but a rebrand should not be stuck for a month.
+[[headers]]
+  for = "/favicon/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+# Source images and logos. `stale-while-revalidate` lets a repeat visitor paint
+# instantly from cache while the refresh happens behind them, so a swapped file
+# is picked up on the NEXT view rather than blocking this one.
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+
+[[headers]]
+  for = "/logo/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"

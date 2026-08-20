@@ -90,7 +90,11 @@ export default function StructuredData({
     name: STUDIO.name,
     description: dict.structuredData.description,
     url: canonicalUrl,
-    image: `${SITE_URL}/images/studio-brandmark.png`,
+    /* The WebP cut, not the PNG. Both are 1254x1254 and visually identical,
+       but the PNG is 3.82MB against 342KB — 11.5x — and this field is fetched
+       by Googlebot, the Rich Results Test and every LLM that reads the graph.
+       Nothing renders it to a visitor, so the PNG bought nothing. */
+    image: `${SITE_URL}/images/studio-brandmark.webp`,
     telephone: PHONE_TEL,
     founder: { '@id': matanId },
 

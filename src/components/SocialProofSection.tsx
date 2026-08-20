@@ -231,7 +231,12 @@ function VideoPillar({
             src={v.src}
             poster={v.poster}
             playsInline
-            preload="metadata"
+            /* "none", not "metadata". These pillars sit roughly ten
+               viewports below the fold, so metadata preload spends two
+               connections and about a second of buffering on files most
+               visitors never scroll to. The poster already carries the
+               whole visual; nothing downloads until play is pressed. */
+            preload="none"
             onEnded={onEnded}
             style={{ objectPosition: v.objectPosition ?? "center" }}
             className="absolute inset-0 h-full w-full object-cover"
