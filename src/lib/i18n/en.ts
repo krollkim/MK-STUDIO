@@ -191,6 +191,9 @@ export const en: Dictionary = {
       'A WhatsApp thank-you from Karin: "Thank you so much for everything, for the time and the care. You genuinely rescued me from a broken playback to a really beautiful one."',
       'A WhatsApp message from Amit Igar: "The studio I rented was insane, the gear is unbelievable. Every take came out amazing, we tracked both vocals and guitars, and the acoustics were just stunning."',
       'A WhatsApp message from Naftali: "Yesterday I pulled out a guitar in front of everyone and played for an hour! You are a king."',
+      'A WhatsApp thank-you from David: "Matan, what an experience. Thank you for every one of the tools you taught me! I can genuinely hear my productions getting better."',
+      "A WhatsApp message from Tomer: \"I wanted to thank you for the production and music theory lessons, I loved every minute of learning from you. I took so much away, and I can finally build things in the software and hear rhythms that never used to click.\"",
+      'A WhatsApp message from Daniel: "I have been coming to the studio with Matan for months and I book with him and nobody else, because he is by far the most professional. The knowledge he brings spans a huge range of genres, and beyond that he simply never stops handing it over to you. In short, the man is a machine."',
     ],
   },
 

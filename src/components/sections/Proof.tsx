@@ -5,11 +5,14 @@ import SocialProofSection, {
 import type { Dictionary } from '@/lib/i18n'
 /* Static imports, not paths: each carries its own intrinsic width and height,
    which is what next/image needs to reserve the box before the screenshot
-   decodes. The three crops have genuinely different shapes (900×600, 866×900,
-   820×300), so there is no single fallback aspect that would do. */
+   decodes. The crops have genuinely different shapes, from 826×261 to 913×915,
+   so there is no single fallback aspect that would do. */
 import reviewKarin from '../../../public/proof/review-karin.png'
 import reviewIgar from '../../../public/proof/review-igar.png'
 import reviewNaftali from '../../../public/proof/review-naftali.png'
+import reviewDavid from '../../../public/proof/review-david.png'
+import reviewTomer from '../../../public/proof/review-tomer.png'
+import reviewDaniel from '../../../public/proof/review-daniel.png'
 
 /**
  * Section 6 — social proof. Renders the existing SocialProofSection component;
@@ -40,7 +43,17 @@ const VIDEO_MEDIA: { src?: string; poster?: string; duration?: string; objectPos
     {},
   ]
 
-const REVIEW_IMAGES = [reviewKarin, reviewIgar, reviewNaftali]
+/* ORDER IS LOAD-BEARING: index-matched against `proof.reviewAlts` in both
+   dictionaries. Adding one here without adding its alt at the same position
+   silently shifts every alt after it onto the wrong screenshot. */
+const REVIEW_IMAGES = [
+  reviewKarin,
+  reviewIgar,
+  reviewNaftali,
+  reviewDavid,
+  reviewTomer,
+  reviewDaniel,
+]
 
 export default function Proof({ dict }: { dict: Dictionary }) {
   const { proof } = dict
