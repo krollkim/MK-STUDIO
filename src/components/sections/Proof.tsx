@@ -22,8 +22,8 @@ import reviewDaniel from '../../../public/proof/review-daniel.png'
  * here. Every readable string — names, roles, pull-quotes, image alt text —
  * comes from the dictionary so it exists once per locale.
  *
- * ➕ TO ADD THE THIRD VIDEO: drop the file in /public/proof, fill in the third
- *    entry of VIDEO_MEDIA below, and give it a name/role in both dictionaries.
+ * ➕ TO ADD A FOURTH VIDEO: the pillar grid renders `videos.slice(0, 3)`, so a
+ *    fourth entry needs a layout decision first, not just data.
  * ➕ TO ADD MORE WRITTEN REVIEWS: crop the screenshot into /public/proof, add a
  *    static import for it above, push that onto REVIEW_IMAGES, and add its alt
  *    text to `proof.reviewAlts` in BOTH dictionaries.
@@ -39,8 +39,13 @@ const VIDEO_MEDIA: { src?: string; poster?: string; duration?: string; objectPos
       // width. Tair sits at ~72% across, which a centred crop misses entirely.
       objectPosition: '82% center',
     },
-    // Third slot: intentionally empty until the next video testimonial arrives.
-    {},
+    // Native 9:16 (576x1024), so no objectPosition: the pillar frame is the
+    // same aspect and a centred crop loses nothing.
+    {
+      src: '/proof/testimonial-maayan.mp4',
+      poster: '/proof/testimonial-maayan-poster.jpg',
+      duration: '1:05',
+    },
   ]
 
 /* ORDER IS LOAD-BEARING: index-matched against `proof.reviewAlts` in both

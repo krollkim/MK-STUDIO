@@ -179,7 +179,15 @@ export const he: Dictionary = {
     videos: [
       { name: 'אור', role: 'תלמיד גיטרה', quote: 'למדתי לנגן בלי להרגיש שאני לומד.' },
       { name: 'תאיר', role: 'יוצרת', quote: 'הגעתי עם מילים, יצאתי עם שיר.' },
-      { name: 'הבא בתור', role: 'הסרטון הבא יכול להיות שלך' },
+      // Quote is subtractive-only from the video at 00:37 — every word is his,
+      // with the stutters and a trailing clause removed, nothing added.
+      // 'יוצר' is inferred from the same recording ("סשן ראשון", "לשבת ולשיר",
+      // "המוזיקה שלי", "סינגל ראשון, אלבום רביעי"), not a label he states.
+      {
+        name: 'מעיין',
+        role: 'יוצר',
+        quote: 'היום אני כבר מבין את השפה, יכול לתקשר את המוזיקה שלי לכדי עבודה.',
+      },
     ],
     placeholder: { title: 'מקום שמור', subtitle: 'לסרטון ההמלצה הבא' },
     reviewAlts: [

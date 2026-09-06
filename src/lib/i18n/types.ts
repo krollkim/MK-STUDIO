@@ -129,7 +129,13 @@ export interface Dictionary {
   proof: {
     eyebrow: string
     title: string
-    videos: { name: string; role: string; quote?: string }[]
+    /**
+     * `role` and `quote` are both optional, matching what VideoPillar actually
+     * renders. A testimonial video often lands before anyone has written the
+     * line under the name, and the honest interim is to show the name alone —
+     * not to invent a role for a real person so the type will compile.
+     */
+    videos: { name: string; role?: string; quote?: string }[]
     placeholder: { title: string; subtitle: string }
     reviewAlts: string[]
   }

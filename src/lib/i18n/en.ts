@@ -184,7 +184,12 @@ export const en: Dictionary = {
     videos: [
       { name: 'Or', role: 'Guitar student', quote: "I learned to play without feeling like I was studying." },
       { name: 'Tair', role: 'Songwriter', quote: 'I came in with words and left with a song.' },
-      { name: 'Next up', role: 'This one could be yours' },
+      // See the Hebrew note on provenance. Rendered for tone, not literally.
+      {
+        name: 'Maayan',
+        role: 'Artist',
+        quote: 'Today I understand the language, and I can turn my music into work.',
+      },
     ],
     placeholder: { title: 'Saved spot', subtitle: 'for the next video review' },
     reviewAlts: [
