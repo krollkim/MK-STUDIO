@@ -1,6 +1,13 @@
 import type { Dictionary } from './types'
 
 /**
+ * Locks a line right-to-left (RLE ... PDF). Without it, a chat box that runs
+ * left-to-right throws "MK STUDIO" and the full stop to the wrong side of the
+ * Hebrew. One wrap per line, because a newline ends the embedding.
+ */
+const rtl = (line: string) => `\u202B${line}\u202C`
+
+/**
  * Hebrew — the primary market, served from the bare root.
  *
  * Punctuation rule: NO em dashes anywhere. Hebrew barely uses them and a
@@ -49,9 +56,10 @@ export const he: Dictionary = {
     opensInWhatsApp: 'נפתח בוואטסאפ בחלון חדש',
     floatLabel: 'פתיחת שיחת וואטסאפ עם M.K Studio בחלון חדש',
     whatsappMessage: [
-      'היי מתן, הגעתי מM.K Studio באינטרנט.',
-      'אשמח לקבוע סשן היכרות חינם. יש לי משהו שכתבתי ואני רוצה להפוך אותו לשיר.',
-    ],
+      'היי מתן - הגעתי מ-MK STUDIO באינטרנט.',
+      'אשמח לקבוע סשן היכרות חינם.',
+      'יש לי משהו שכתבתי ואני רוצה להפוך אותו לשיר.',
+    ].map(rtl),
   },
 
   hero: {
