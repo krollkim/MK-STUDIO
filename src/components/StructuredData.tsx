@@ -126,8 +126,15 @@ export default function StructuredData({
      * `sameAs` is for IDENTITY: other places on the web that are this same
      * business. The wa.me link that used to sit here is an ACTION, not an
      * identity, and it now lives in `potentialAction`, where it belongs.
+     *
+     * The Instagram is Matan's handle, but it runs as the studio's account
+     * ("Matan Katz Productions", M.K STUDIO in the bio, the booking number is
+     * PHONE_TEL), so it is listed here and on the Person.
      */
-    sameAs: ['https://www.facebook.com/MkStudioRec'],
+    sameAs: [
+      'https://www.facebook.com/MkStudioRec',
+      'https://www.instagram.com/matankatz7',
+    ],
 
     /** The one conversion action on the site, stated as an action. */
     potentialAction: {
